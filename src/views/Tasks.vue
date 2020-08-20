@@ -52,11 +52,12 @@
             />
             This month
             <br />
-            <button @click="addNewTask">Add</button>
+            <button @click.prevent="addNewTask">Add task</button>
         </form>
         <section v-for="task in tasks" :key="task.title">
             <h3>{{ task.title }}</h3>
             <p>{{ task.description }}</p>
+            <button @click="deleteTask(task.id)">delete</button>
         </section>
     </div>
 </template>
@@ -90,6 +91,7 @@ export default {
         addNewTask() {
             this.newTask.id = uuidv4();
             this.newTask.update = Date.now();
+            console.log(this.newTask);
 
             if (Object.values(this.newTask).every(value => value !== null)) {
                 db.collection("tasks")
@@ -103,12 +105,23 @@ export default {
                     });
             }
             for (let key in this.newTask) {
-                const resetKeys = ['title', 'description', 'update']
+                const resetKeys = ["title", "description", "update"];
                 if (resetKeys.includes(key)) {
                     this.newTask[key] = null;
                 }
             }
             this.newTask.completed = false;
+        },
+        deleteTask(task) {
+            db.collection("tasks")
+                .doc(task)
+                .delete()
+                .then(function() {
+                    console.log("Document successfully deleted!");
+                })
+                .catch(function(error) {
+                    console.error("Error removing document: ", error);
+                });
         }
     },
     created() {
