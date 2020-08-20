@@ -57,7 +57,7 @@
         <section v-for="task in tasks" :key="task.title">
             <h3>{{ task.title }}</h3>
             <p>{{ task.description }}</p>
-            <button @click="deleteTask(task.id)">delete</button>
+            <button @click="deleteTask(task)">delete</button>
         </section>
     </div>
 </template>
@@ -114,7 +114,7 @@ export default {
         },
         deleteTask(task) {
             db.collection("tasks")
-                .doc(task)
+                .doc(task.id)
                 .delete()
                 .then(function() {
                     console.log("Document successfully deleted!");
