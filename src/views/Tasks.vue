@@ -1,6 +1,7 @@
 <template>
     <div>
         <h1>Tasks</h1>
+        <button @click="resetForm()">New task</button>
         <form>
             <input type="text" v-model="newTask.title" /> Title
             <br />
@@ -52,12 +53,18 @@
             />
             This month
             <br />
-            <button @click.prevent="addNewTask">Add task</button>
+            <button v-if="!updatingTask" @click.prevent="addNewTask">
+                Add task
+            </button>
+            <button v-else @click.prevent="updateTask">Update task</button>
         </form>
         <section v-for="task in tasks" :key="task.title">
             <h3>{{ task.title }}</h3>
             <p>{{ task.description }}</p>
             <button @click="deleteTask(task)">delete</button>
+            <button @click="(newTask = { ...task }), (updatingTask = true)">
+                update
+            </button>
         </section>
     </div>
 </template>
@@ -81,7 +88,8 @@ export default {
                 colour: 1,
                 period: 1,
                 update: null
-            }
+            },
+            updatingTask: false
         };
     },
     firestore: {
@@ -95,7 +103,6 @@ export default {
 
             if (Object.values(this.newTask).every(value => value !== null)) {
                 db.collection("tasks")
-
                     .doc(this.newTask.id)
                     .set(this.newTask)
                     .then(function() {
@@ -105,18 +112,12 @@ export default {
                         console.error("Error writing document: ", error);
                     });
             }
-            for (let key in this.newTask) {
-                const resetKeys = ["title", "description", "update"];
-                if (resetKeys.includes(key)) {
-                    this.newTask[key] = null;
-                }
-            }
-            this.newTask.completed = false;
+            this.resetForm();
         },
-        updateTask(task) {
+        updateTask() {
             this.newTask.update = Date.now();
             db.collection("tasks")
-                .doc(task.id)
+                .doc(this.newTask.id)
                 .update(this.newTask)
                 .then(function() {
                     console.log("Document successfully updated!");
@@ -125,6 +126,7 @@ export default {
                     // The document probably doesn't exist.
                     console.error("Error updating document: ", error);
                 });
+            this.resetForm();
         },
         deleteTask(task) {
             db.collection("tasks")
@@ -136,6 +138,16 @@ export default {
                 .catch(function(error) {
                     console.error("Error removing document: ", error);
                 });
+        },
+        resetForm() {
+            for (let key in this.newTask) {
+                const resetKeys = ["title", "description", "update"];
+                if (resetKeys.includes(key)) {
+                    this.newTask[key] = null;
+                }
+            }
+            this.newTask.completed = false;
+            this.updatingTask = false;
         }
     },
     created() {
