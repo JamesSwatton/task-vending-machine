@@ -95,6 +95,7 @@ export default {
 
             if (Object.values(this.newTask).every(value => value !== null)) {
                 db.collection("tasks")
+
                     .doc(this.newTask.id)
                     .set(this.newTask)
                     .then(function() {
@@ -111,6 +112,19 @@ export default {
                 }
             }
             this.newTask.completed = false;
+        },
+        updateTask(task) {
+            this.newTask.update = Date.now();
+            db.collection("tasks")
+                .doc(task.id)
+                .update(this.newTask)
+                .then(function() {
+                    console.log("Document successfully updated!");
+                })
+                .catch(function(error) {
+                    // The document probably doesn't exist.
+                    console.error("Error updating document: ", error);
+                });
         },
         deleteTask(task) {
             db.collection("tasks")
