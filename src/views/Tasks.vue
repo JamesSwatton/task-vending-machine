@@ -61,6 +61,11 @@
         <section v-for="task in tasks" :key="task.title">
             <h3>{{ task.title }}</h3>
             <p>{{ task.description }}</p>
+            <input
+                type="checkbox"
+                @click="updateStatus(task)"
+                :checked="task.completed"
+            />
             <button @click="deleteTask(task)">delete</button>
             <button @click="(newTask = { ...task }), (updatingTask = true)">
                 update
@@ -127,6 +132,19 @@ export default {
                     console.error("Error updating document: ", error);
                 });
             this.resetForm();
+        },
+        updateStatus(task) {
+            const newStatus = !task.completed;
+            db.collection("tasks")
+                .doc(task.id)
+                .update({ completed: newStatus })
+                .then(function() {
+                    console.log("Document successfully updated!");
+                })
+                .catch(function(error) {
+                    // The document probably doesn't exist.
+                    console.error("Error updating document: ", error);
+                });
         },
         deleteTask(task) {
             db.collection("tasks")
