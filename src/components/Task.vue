@@ -1,82 +1,30 @@
 <template>
-    <div>
-        <h1>Tasks</h1>
-        <button @click="resetForm()">New task</button>
-        <form>
-            <input type="text" v-model="newTask.title" /> Title
-            <br />
-            <input type="text" v-model="newTask.description" /> Description
-            <br />
-            <h4>Colour</h4>
-            <input
-                type="radio"
-                name="colour"
-                value="1"
-                v-model.number="newTask.colour"
-            />
-            Blue
-            <input
-                type="radio"
-                name="colour"
-                value="2"
-                v-model.number="newTask.colour"
-            />
-            Green
-            <input
-                type="radio"
-                name="colour"
-                value="3"
-                v-model.number="newTask.colour"
-            />
-            Yellow
-            <br />
-            <h4>Period</h4>
-            <input
-                type="radio"
-                name="period"
-                value="1"
-                v-model.number="newTask.period"
-            />
-            Today
-            <input
-                type="radio"
-                name="period"
-                value="2"
-                v-model.number="newTask.period"
-            />
-            This week
-            <input
-                type="radio"
-                name="period"
-                value="3"
-                v-model.number="newTask.period"
-            />
-            This month
-            <br />
-            <button v-if="!updatingTask" @click.prevent="addNewTask">
-                Add task
-            </button>
-            <button v-else @click.prevent="updateTask">Update task</button>
-        </form>
-        <task v-for="task in tasks" :task="task" :key="task.id"></task>
+    <div class="bg-gray-200">
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.description }}</p>
+        <input
+            type="checkbox"
+            @click="updateStatus(task)"
+            :checked="task.completed"
+        />
+        <button @click="deleteTask(task)">delete</button>
+        <button @click="(newTask = { ...task }), (updatingTask = true)">
+            update
+        </button>
     </div>
 </template>
 
 <script>
 import firebase from "../firebaseConfig.js";
 import { v4 as uuidv4 } from "uuid";
-import task from "../components/Task.vue";
 
 const db = firebase.firestore();
 
 export default {
-    name: "Tasks",
-    components: {
-        task
-    },
+    name: "Task",
+    props: ["task"],
     data() {
         return {
-            tasks: [],
             newTask: {
                 id: null,
                 title: null,
@@ -88,9 +36,6 @@ export default {
             },
             updatingTask: false
         };
-    },
-    firestore: {
-        tasks: db.collection("tasks")
     },
     methods: {
         addNewTask() {
