@@ -1,7 +1,13 @@
 <template>
     <div class="bg-gray-200">
-        <h3>{{ task.title }}</h3>
-        <p>{{ task.description }}</p>
+        <div v-if="!updatingTask">
+            <h3>{{ task.title }}</h3>
+            <p>{{ task.description }}</p>
+        </div>
+        <div v-else>
+            <input type="text" :placeholder="thisTask.title" />
+            <input type="text" :placeholder="thisTask.description" />
+        </div>
         <input
             type="checkbox"
             @click="updateStatus(task)"
@@ -25,10 +31,10 @@ export default {
     props: ["task"],
     data() {
         return {
-            newTask: {
+            defaultTask: {
                 id: null,
-                title: null,
-                description: null,
+                title: "Title",
+                description: "Description",
                 completed: false,
                 colour: 1,
                 period: 1,
@@ -36,6 +42,11 @@ export default {
             },
             updatingTask: false
         };
+    },
+    computed: {
+        thisTask() {
+            return this.task ? this.task : this.defaultTask;
+        }
     },
     methods: {
         addNewTask() {
