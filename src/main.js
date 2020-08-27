@@ -4,6 +4,8 @@ import router from "./router";
 import { firestorePlugin } from "vuefire";
 import "./assets/tailwind.css";
 
+export const eventBus = new Vue();
+
 Vue.config.productionTip = false;
 
 Vue.use(firestorePlugin);

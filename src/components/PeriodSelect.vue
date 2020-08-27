@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pt-16 pb-10 pl-6">
         <button
             class="period-btn"
             :class="{ current: selected === 1 }"
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { eventBus } from "../main";
+
 export default {
     name: "PeriodSelect",
     data() {
@@ -41,7 +43,7 @@ export default {
             console.log(`selected period: ${selected}`);
 
             this.selected = selected;
-            this.$emit("selectedPeriod", selected);
+            eventBus.$emit("selectedPeriod", selected);
         }
     }
 };

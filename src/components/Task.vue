@@ -1,11 +1,11 @@
 <template>
-    <div class="bg-gray-200">
+    <div class="w-56 p-4 mb-4 mr-4 rounded-lg" :class="taskColour">
         <div v-if="!updatingTask">
-            <h3>{{ task.title }}</h3>
+            <h3 class="title">{{ task.title }}</h3>
             <p>{{ task.description }}</p>
         </div>
         <div v-else>
-            <input type="text" :placeholder="thisTask.title" />
+            <input class="title" type="text" :placeholder="thisTask.title" />
             <input type="text" :placeholder="thisTask.description" />
         </div>
         <input
@@ -40,12 +40,16 @@ export default {
                 period: 1,
                 update: null
             },
-            updatingTask: false
+            updatingTask: false,
+            colours: ["blue", "green", "yellow"]
         };
     },
     computed: {
         thisTask() {
             return this.task ? this.task : this.defaultTask;
+        },
+        taskColour() {
+            return this.colours[this.task.colour - 1];
         }
     },
     methods: {
@@ -118,3 +122,21 @@ export default {
     }
 };
 </script>
+
+<style>
+.title {
+    @apply text-xl pt-0;
+}
+
+.blue {
+    @apply bg-blue-400;
+}
+
+.green {
+    @apply bg-green-400;
+}
+
+.yellow {
+    @apply bg-yellow-400;
+}
+</style>
