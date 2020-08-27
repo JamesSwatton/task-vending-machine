@@ -1,5 +1,5 @@
 <template>
-    <div class="pl-10">
+    <div class="pl-12">
         <task-app v-for="task in tasks" :task="task" :key="task.id"></task-app>
     </div>
 </template>

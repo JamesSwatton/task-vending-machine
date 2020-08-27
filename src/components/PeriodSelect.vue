@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-16 pb-10 pl-6">
+    <div class="pt-16 pb-16 pl-8">
         <button
             class="period-btn"
             :class="{ current: selected === 1 }"
@@ -51,10 +51,10 @@ export default {
 
 <style scoped>
 .period-btn {
-    @apply inline-block px-4 leading-none text-3xl text-gray-500 font-thin;
+    @apply inline-block px-4 leading-none text-3xl text-gray-500;
 }
 
 .current {
-    @apply text-gray-900 text-5xl font-normal;
+    @apply text-gray-900 text-5xl font-semibold;
 }
 </style>

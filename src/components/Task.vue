@@ -1,18 +1,35 @@
 <template>
-    <div class="w-56 p-4 mb-4 mr-4 rounded-lg" :class="taskColour">
+    <div class="w-56 p-4 mb-6 mr-6 rounded-lg shadow-md" :class="taskColour">
         <div v-if="!updatingTask">
-            <h3 class="title">{{ task.title }}</h3>
-            <p>{{ task.description }}</p>
+            <h3 class="title" :class="{ 'line-through': task.completed }">
+                {{ task.title }}
+            </h3>
+            <p class="description">{{ task.description }}</p>
         </div>
         <div v-else>
             <input class="title" type="text" :placeholder="thisTask.title" />
-            <input type="text" :placeholder="thisTask.description" />
+            <input
+                class="description"
+                type="text"
+                :placeholder="thisTask.description"
+            />
         </div>
-        <input
-            type="checkbox"
+        <button
+            class="rounded-full"
+            :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
             @click="updateStatus(task)"
-            :checked="task.completed"
-        />
+        >
+            <svg
+                class="w-8 h-8 text-white fill-current"
+                :class="[task.completed ? 'text-gray-900' : 'text-white']"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    d="M9 16.2l-3.5-3.5a.984.984 0 00-1.4 0 .984.984 0 000 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7a.984.984 0 000-1.4.984.984 0 00-1.4 0L9 16.2z"
+                />
+            </svg>
+        </button>
         <button @click="deleteTask(task)">delete</button>
         <button @click="(newTask = { ...task }), (updatingTask = true)">
             update
@@ -125,7 +142,11 @@ export default {
 
 <style>
 .title {
-    @apply text-xl pt-0;
+    @apply text-2xl pt-0 mb-2 text-gray-900;
+}
+
+.description {
+    @apply text-sm font-thin text-gray-900;
 }
 
 .blue {
