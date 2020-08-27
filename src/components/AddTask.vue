@@ -34,15 +34,16 @@ export default {
     name: "AddTask",
     data() {
         return {
-            selected: 2
+            selected: 1
         };
     },
     methods: {
         emitColour(event) {
-            console.log(`selected colour: ${event.target.value}`);
+            const selected = parseInt(event.target.value);
+            console.log(`selected colour: ${selected}`);
 
-            this.selected = parseInt(event.target.value);
-            this.$emit("selectedColour", event.target.value);
+            this.selected = selected;
+            this.$emit("selectedColour", selected);
         }
     }
 };

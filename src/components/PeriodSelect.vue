@@ -37,10 +37,11 @@ export default {
     },
     methods: {
         emitPeriod(event) {
-            console.log(`selected period: ${event.target.value}`);
+            const selected = parseInt(event.target.value);
+            console.log(`selected period: ${selected}`);
 
-            this.selected = parseInt(event.target.value);
-            this.$emit("selectedPeriod", event.target.value);
+            this.selected = selected;
+            this.$emit("selectedPeriod", selected);
         }
     }
 };
