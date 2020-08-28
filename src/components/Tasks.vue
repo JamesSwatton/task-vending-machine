@@ -1,5 +1,5 @@
 <template>
-    <div class="pl-12">
+    <div class="flex flex-wrap items-start pl-12 ">
         <task-app v-for="task in tasks" :task="task" :key="task.id"></task-app>
     </div>
 </template>

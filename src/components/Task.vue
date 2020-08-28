@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative w-56 px-4 py-5 mb-6 mr-6 rounded-lg shadow-md group"
+        class="relative w-56 h-auto px-4 py-5 mb-6 mr-6 rounded-lg shadow-md group"
         :class="taskColour"
     >
         <button
@@ -35,6 +35,21 @@
         </div>
         <div id="edit" class="flex justify-end mt-2">
             <button
+                id="update"
+                class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
+                @click="(newTask = { ...task }), (updatingTask = true)"
+            >
+                <svg
+                    class="w-5 h-5 text-white fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                    />
+                </svg>
+            </button>
+            <button
                 id="done"
                 class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
                 :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
@@ -48,21 +63,6 @@
                 >
                     <path
                         d="M9 16.2l-3.5-3.5a.984.984 0 00-1.4 0 .984.984 0 000 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7a.984.984 0 000-1.4.984.984 0 00-1.4 0L9 16.2z"
-                    />
-                </svg>
-            </button>
-            <button
-                id="update"
-                class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
-                @click="(newTask = { ...task }), (updatingTask = true)"
-            >
-                <svg
-                    class="w-5 h-5 text-white fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                     />
                 </svg>
             </button>

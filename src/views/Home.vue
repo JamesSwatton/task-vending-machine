@@ -1,10 +1,14 @@
 <template>
     <div>
-        <div class="flex">
+        <div class="inline-flex">
             <add-task-app></add-task-app>
-            <div>
+            <div class="relative h-screen pl-20 overflow-auto">
                 <period-select-app></period-select-app>
                 <tasks-app></tasks-app>
+                <div
+                    id="overflow-gradient"
+                    class="fixed bottom-0 w-full h-24 bg-gradient-to-t from-white to-transparent"
+                ></div>
             </div>
         </div>
     </div>

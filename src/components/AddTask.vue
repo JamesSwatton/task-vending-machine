@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col items-center float-left w-20 h-screen pt-20 bg-white border-r border-gray-300"
+        class="fixed inline-flex flex-col items-center w-20 h-screen pt-20 bg-white border-r border-gray-300"
     >
         <button
             class="flex items-center justify-center w-8 h-8 mb-6 bg-gray-900 rounded-full"
@@ -15,38 +15,40 @@
                 />
             </svg>
         </button>
-        <div
-            class="btn-container"
-            :class="{ 'border border-gray-900': selected === 1 }"
-        >
-            <button
-                class="bg-blue-400 rnd-btn hover:bg-blue-500"
-                id="blue"
-                value="1"
-                @click="emitColour"
-            ></button>
-        </div>
-        <div
-            class="btn-container"
-            :class="{ 'border border-gray-900': selected === 2 }"
-        >
-            <button
-                class="bg-green-400 rnd-btn hover:bg-green-500"
-                id="blue"
-                value="2"
-                @click="emitColour"
-            ></button>
-        </div>
-        <div
-            class="btn-container"
-            :class="{ 'border border-gray-900': selected === 3 }"
-        >
-            <button
-                class="bg-yellow-400 rnd-btn hover:bg-yellow-500"
-                id="blue"
-                value="3"
-                @click="emitColour"
-            ></button>
+        <div id="colour-select">
+            <div
+                class="btn-container"
+                :class="{ 'border border-gray-900': selected === 1 }"
+            >
+                <button
+                    class="bg-blue-400 rnd-btn hover:bg-blue-500"
+                    id="blue"
+                    value="1"
+                    @click="emitColour"
+                ></button>
+            </div>
+            <div
+                class="btn-container"
+                :class="{ 'border border-gray-900': selected === 2 }"
+            >
+                <button
+                    class="bg-green-400 rnd-btn hover:bg-green-500"
+                    id="blue"
+                    value="2"
+                    @click="emitColour"
+                ></button>
+            </div>
+            <div
+                class="btn-container"
+                :class="{ 'border border-gray-900': selected === 3 }"
+            >
+                <button
+                    class="bg-yellow-400 rnd-btn hover:bg-yellow-500"
+                    id="blue"
+                    value="3"
+                    @click="emitColour"
+                ></button>
+            </div>
         </div>
     </div>
 </template>
