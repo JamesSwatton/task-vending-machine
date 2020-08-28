@@ -1,5 +1,24 @@
 <template>
-    <div class="w-56 p-4 mb-6 mr-6 rounded-lg shadow-md" :class="taskColour">
+    <div
+        class="relative w-56 px-4 py-5 mb-6 mr-6 rounded-lg shadow-md group"
+        :class="taskColour"
+    >
+        <button
+            id="delete"
+            class="absolute top-0 right-0 invisible p-2 group-hover:visible"
+            @click="deleteTask(task)"
+        >
+            <svg
+                class="w-5 h-5 text-gray-900 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+            >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                    d="M18.3 5.71a.996.996 0 00-1.41 0L12 10.59 7.11 5.7A.996.996 0 105.7 7.11L10.59 12 5.7 16.89a.996.996 0 101.41 1.41L12 13.41l4.89 4.89a.996.996 0 101.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"
+                />
+            </svg>
+        </button>
         <div v-if="!updatingTask">
             <h3 class="title" :class="{ 'line-through': task.completed }">
                 {{ task.title }}
@@ -15,12 +34,13 @@
             />
         </div>
         <button
-            class="rounded-full"
+            id="done"
+            class="flex items-center justify-center w-8 h-8 rounded-full"
             :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
             @click="updateStatus(task)"
         >
             <svg
-                class="w-8 h-8 text-white fill-current"
+                class="w-6 h-6 text-white fill-current"
                 :class="[task.completed ? 'text-gray-900' : 'text-white']"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -30,7 +50,6 @@
                 />
             </svg>
         </button>
-        <button @click="deleteTask(task)">delete</button>
         <button @click="(newTask = { ...task }), (updatingTask = true)">
             update
         </button>
