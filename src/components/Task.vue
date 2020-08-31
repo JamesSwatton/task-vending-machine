@@ -21,16 +21,16 @@
         </button>
         <div v-if="!updatingTask">
             <h3 class="title" :class="{ 'line-through': task.completed }">
-                {{ thisTask.title }}
+                {{ task.title }}
             </h3>
-            <p class="description">{{ thisTask.description }}</p>
+            <p class="description">{{ task.description }}</p>
         </div>
         <div v-else>
-            <input class="title" type="text" :placeholder="thisTask.title" />
+            <input class="title" type="text" :placeholder="task.title" />
             <input
                 class="description"
                 type="text"
-                :placeholder="thisTask.description"
+                :placeholder="task.description"
             />
         </div>
         <div id="edit" class="flex justify-end mt-2">
@@ -52,14 +52,12 @@
             <button
                 id="done"
                 class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
-                :class="[thisTask.completed ? 'bg-white' : 'bg-gray-900']"
+                :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
                 @click="updateStatus(task)"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
-                    :class="[
-                        thisTask.completed ? 'text-gray-900' : 'text-white'
-                    ]"
+                    :class="[task.completed ? 'text-gray-900' : 'text-white']"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -73,7 +71,6 @@
 </template>
 
 <script>
-import { eventBus } from "../main";
 import firebase from "../firebaseConfig.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -81,38 +78,17 @@ const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task"],
+    props: ["task", "updatingTask"],
     data() {
         return {
-            defaultTask: {
-                id: null,
-                title: "Title",
-                description: "Description",
-                completed: false,
-                colour: 1,
-                period: 1,
-                update: null
-            },
-            taskToUpdate: null,
-            updatingTask: false,
+            taskToUpdate: {},
             colours: ["blue", "green", "yellow"]
         };
     },
     computed: {
-        thisTask() {
-            return this.task ? this.task : this.defaultTask;
-        },
         taskColour() {
-            return this.colours[this.thisTask.colour - 1];
+            return this.colours[this.task.colour - 1];
         }
-    },
-    created() {
-        eventBus.$on("emitColour", data => {
-            this.defaultTask.colour = data;
-        });
-        eventBus.$on("selectedPeriod", data => {
-            this.defaultTask.period = data;
-        });
     },
     methods: {
         addNewTask() {

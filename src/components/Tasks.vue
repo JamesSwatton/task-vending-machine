@@ -1,7 +1,16 @@
 <template>
     <div class="flex flex-wrap items-start pl-12">
-        <task-app v-if="newTask" :task="false"></task-app>
-        <task-app v-for="task in tasks" :task="task" :key="task.id"></task-app>
+        <task-app
+            v-if="newTask"
+            :task="defaultTask"
+            :updatingTask="true"
+        ></task-app>
+        <task-app
+            v-for="task in tasks"
+            :task="task"
+            :updatingTask="false"
+            :key="task.id"
+        ></task-app>
     </div>
 </template>
 
@@ -20,7 +29,16 @@ export default {
     data() {
         return {
             tasks: [],
-            newTask: false
+            newTask: false,
+            defaultTask: {
+                id: null,
+                title: "Title",
+                description: "Description",
+                completed: false,
+                colour: 1,
+                period: 1,
+                update: null
+            }
         };
     },
     firestore: {
@@ -30,6 +48,12 @@ export default {
         eventBus.$on("newTask", data => {
             console.log(data);
             this.newTask = data;
+        });
+        eventBus.$on("emitColour", data => {
+            this.defaultTask.colour = data;
+        });
+        eventBus.$on("selectedPeriod", data => {
+            this.defaultTask.period = data;
         });
     }
 };
