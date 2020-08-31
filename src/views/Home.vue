@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="h-screen">
         <div class="inline-flex">
             <add-task-app></add-task-app>
-            <div class="relative h-screen pl-20 overflow-auto">
+            <div class="pl-20 overflow-auto">
                 <period-select-app></period-select-app>
                 <tasks-app></tasks-app>
                 <div

@@ -1,5 +1,6 @@
 <template>
-    <div class="flex flex-wrap items-start pl-12 ">
+    <div class="flex flex-wrap items-start pl-12">
+        <task-app v-if="newTask" :task="false"></task-app>
         <task-app v-for="task in tasks" :task="task" :key="task.id"></task-app>
     </div>
 </template>
@@ -19,19 +20,16 @@ export default {
     data() {
         return {
             tasks: [],
-            colour: 1,
-            period: 1
+            newTask: false
         };
     },
     firestore: {
         tasks: db.collection("tasks").orderBy("update", "desc")
     },
     created() {
-        eventBus.$on("selectedColour", data => {
-            this.colour = data;
-        });
-        eventBus.$on("selectedPeriod", data => {
-            this.period = data;
+        eventBus.$on("newTask", data => {
+            console.log(data);
+            this.newTask = data;
         });
     }
 };

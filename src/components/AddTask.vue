@@ -3,7 +3,9 @@
         class="fixed inline-flex flex-col items-center w-20 h-screen pt-20 bg-white border-r border-gray-300"
     >
         <button
+            id="add-task"
             class="flex items-center justify-center w-8 h-8 mb-6 bg-gray-900 rounded-full"
+            @click="emitNewTask"
         >
             <svg
                 class="w-6 h-6 text-white fill-current"
@@ -64,6 +66,9 @@ export default {
         };
     },
     methods: {
+        emitNewTask() {
+            eventBus.$emit("newTask", true);
+        },
         emitColour(event) {
             const selected = parseInt(event.target.value);
             console.log(`selected colour: ${selected}`);

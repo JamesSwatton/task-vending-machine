@@ -21,9 +21,9 @@
         </button>
         <div v-if="!updatingTask">
             <h3 class="title" :class="{ 'line-through': task.completed }">
-                {{ task.title }}
+                {{ thisTask.title }}
             </h3>
-            <p class="description">{{ task.description }}</p>
+            <p class="description">{{ thisTask.description }}</p>
         </div>
         <div v-else>
             <input class="title" type="text" :placeholder="thisTask.title" />
@@ -37,7 +37,7 @@
             <button
                 id="update"
                 class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
-                @click="(newTask = { ...task }), (updatingTask = true)"
+                @click="(taskToUpdate = { ...task }), (updatingTask = true)"
             >
                 <svg
                     class="w-5 h-5 text-white fill-current"
@@ -52,12 +52,14 @@
             <button
                 id="done"
                 class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
-                :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
+                :class="[thisTask.completed ? 'bg-white' : 'bg-gray-900']"
                 @click="updateStatus(task)"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
-                    :class="[task.completed ? 'text-gray-900' : 'text-white']"
+                    :class="[
+                        thisTask.completed ? 'text-gray-900' : 'text-white'
+                    ]"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -71,6 +73,7 @@
 </template>
 
 <script>
+import { eventBus } from "../main";
 import firebase from "../firebaseConfig.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -90,6 +93,7 @@ export default {
                 period: 1,
                 update: null
             },
+            taskToUpdate: null,
             updatingTask: false,
             colours: ["blue", "green", "yellow"]
         };
@@ -99,8 +103,16 @@ export default {
             return this.task ? this.task : this.defaultTask;
         },
         taskColour() {
-            return this.colours[this.task.colour - 1];
+            return this.colours[this.thisTask.colour - 1];
         }
+    },
+    created() {
+        eventBus.$on("emitColour", data => {
+            this.defaultTask.colour = data;
+        });
+        eventBus.$on("selectedPeriod", data => {
+            this.defaultTask.period = data;
+        });
     },
     methods: {
         addNewTask() {
@@ -119,7 +131,6 @@ export default {
                         console.error("Error writing document: ", error);
                     });
             }
-            this.resetForm();
         },
         updateTask() {
             this.newTask.update = Date.now();
@@ -133,7 +144,6 @@ export default {
                     // The document probably doesn't exist.
                     console.error("Error updating document: ", error);
                 });
-            this.resetForm();
         },
         updateStatus(task) {
             const newStatus = !task.completed;
