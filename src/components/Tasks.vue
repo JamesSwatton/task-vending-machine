@@ -49,7 +49,7 @@ export default {
             console.log(data);
             this.newTask = data;
         });
-        eventBus.$on("emitColour", data => {
+        eventBus.$on("selectedColour", data => {
             this.defaultTask.colour = data;
         });
         eventBus.$on("selectedPeriod", data => {

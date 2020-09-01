@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative w-56 h-auto px-4 py-5 mb-6 mr-6 rounded-lg shadow-md group"
+        class="relative w-56 h-auto px-4 py-5 mb-6 mr-6 rounded-lg shadow-none group transition duration-200 ease-in-out hover:shadow-xl"
         :class="taskColour"
     >
         <button
@@ -26,21 +26,28 @@
             <p class="description">{{ task.description }}</p>
         </div>
         <div v-else>
-            <input class="title" type="text" :placeholder="task.title" />
             <input
-                class="description"
                 type="text"
-                :placeholder="task.description"
+                ref="taskInput"
+                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-900 title focus:outline-none"
+                v-model="taskCopy.title"
+            />
+            <input
+                type="text"
+                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-900 description focus:outline-none"
+                v-model="taskCopy.description"
             />
         </div>
-        <div id="edit" class="flex justify-end mt-2">
+        <div id="edit" class="flex justify-end mt-2" v-if="task.id">
             <button
                 id="update"
-                class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
-                @click="(taskToUpdate = { ...task }), (updatingTask = true)"
+                class="flex items-center justify-center w-8 h-8 rounded-full"
+                :class="[updatingTask ? 'bg-white' : 'bg-gray-900']"
+                @click="updateTask"
             >
                 <svg
-                    class="w-5 h-5 text-white fill-current"
+                    class="w-5 h-5 fill-current"
+                    :class="[updatingTask ? 'text-gray-900' : 'text-white']"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -54,6 +61,7 @@
                 class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
                 :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
                 @click="updateStatus(task)"
+                v-if="!updatingTask"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
@@ -67,12 +75,29 @@
                 </svg>
             </button>
         </div>
+        <div id="add" class="flex justify-end mt-2" v-else>
+            <button
+                class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
+                @click="addNewTask"
+            >
+                <svg
+                    class="w-6 h-6 text-white fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z"
+                    />
+                </svg>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
 import firebase from "../firebaseConfig.js";
 import { v4 as uuidv4 } from "uuid";
+import { eventBus } from "../main";
 
 const db = firebase.firestore();
 
@@ -81,7 +106,7 @@ export default {
     props: ["task", "updatingTask"],
     data() {
         return {
-            taskToUpdate: {},
+            taskCopy: {},
             colours: ["blue", "green", "yellow"]
         };
     },
@@ -90,18 +115,28 @@ export default {
             return this.colours[this.task.colour - 1];
         }
     },
+    created() {
+        this.taskCopy = { ...this.task };
+    },
+    mounted() {
+        if (this.updatingTask) {
+            console.log("hello");
+            this.$refs.taskInput.focus();
+        }
+    },
     methods: {
         addNewTask() {
-            this.newTask.id = uuidv4();
-            this.newTask.update = Date.now();
-            console.log(this.newTask);
+            this.taskCopy.id = uuidv4();
+            this.taskCopy.update = Date.now();
+            console.log(this.taskCopy);
 
-            if (Object.values(this.newTask).every(value => value !== null)) {
+            if (Object.values(this.taskCopy).every(value => value !== null)) {
                 db.collection("tasks")
-                    .doc(this.newTask.id)
-                    .set(this.newTask)
+                    .doc(this.taskCopy.id)
+                    .set(this.taskCopy)
                     .then(function() {
                         console.log("Document successfully written!");
+                        eventBus.$emit("newTask", false);
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
@@ -109,17 +144,20 @@ export default {
             }
         },
         updateTask() {
-            this.newTask.update = Date.now();
-            db.collection("tasks")
-                .doc(this.newTask.id)
-                .update(this.newTask)
-                .then(function() {
-                    console.log("Document successfully updated!");
-                })
-                .catch(function(error) {
-                    // The document probably doesn't exist.
-                    console.error("Error updating document: ", error);
-                });
+            if (this.updatingTask) {
+                this.taskCopy.update = Date.now();
+                db.collection("tasks")
+                    .doc(this.taskCopy.id)
+                    .update(this.taskCopy)
+                    .then(function() {
+                        console.log("Document successfully updated!");
+                    })
+                    .catch(function(error) {
+                        // The document probably doesn't exist.
+                        console.error("Error updating document: ", error);
+                    });
+            }
+            this.updatingTask = !this.updatingTask;
         },
         updateStatus(task) {
             const newStatus = !task.completed;
