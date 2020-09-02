@@ -28,9 +28,9 @@
         <div v-else>
             <input
                 type="text"
-                ref="taskInput"
                 class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-900 title focus:outline-none"
                 v-model="taskCopy.title"
+                v-focus
             />
             <input
                 type="text"
@@ -38,7 +38,7 @@
                 v-model="taskCopy.description"
             />
         </div>
-        <div id="edit" class="flex justify-end mt-2" v-if="task.id">
+        <div id="edit" class="flex justify-end mt-2" v-if="!isRecentTask">
             <button
                 id="update"
                 class="flex items-center justify-center w-8 h-8 rounded-full"
@@ -61,7 +61,6 @@
                 class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
                 :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
                 @click="updateStatus(task)"
-                v-if="!updatingTask"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
@@ -78,7 +77,7 @@
         <div id="add" class="flex justify-end mt-2" v-else>
             <button
                 class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
-                @click="addNewTask"
+                @click="updateTask"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
@@ -96,53 +95,44 @@
 
 <script>
 import firebase from "../firebaseConfig.js";
-import { v4 as uuidv4 } from "uuid";
 import { eventBus } from "../main";
 
 const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task", "updatingTask"],
+    props: ["task", "recentelyAdded"],
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
+            }
+        }
+    },
     data() {
         return {
             taskCopy: {},
+            updatingTask: false,
             colours: ["blue", "green", "yellow"]
         };
     },
     computed: {
         taskColour() {
             return this.colours[this.task.colour - 1];
+        },
+        isRecentTask() {
+            return this.recentelyAdded == this.taskCopy.id;
         }
     },
     created() {
         this.taskCopy = { ...this.task };
     },
     mounted() {
-        if (this.updatingTask) {
-            console.log("hello");
-            this.$refs.taskInput.focus();
+        if (this.isRecentTask) {
+            this.updatingTask = true;
         }
     },
     methods: {
-        addNewTask() {
-            this.taskCopy.id = uuidv4();
-            this.taskCopy.update = Date.now();
-            console.log(this.taskCopy);
-
-            if (Object.values(this.taskCopy).every(value => value !== null)) {
-                db.collection("tasks")
-                    .doc(this.taskCopy.id)
-                    .set(this.taskCopy)
-                    .then(function() {
-                        console.log("Document successfully written!");
-                        eventBus.$emit("newTask", false);
-                    })
-                    .catch(function(error) {
-                        console.error("Error writing document: ", error);
-                    });
-            }
-        },
         updateTask() {
             if (this.updatingTask) {
                 this.taskCopy.update = Date.now();
@@ -151,6 +141,7 @@ export default {
                     .update(this.taskCopy)
                     .then(function() {
                         console.log("Document successfully updated!");
+                        eventBus.$emit("recentelyAdded", null);
                     })
                     .catch(function(error) {
                         // The document probably doesn't exist.

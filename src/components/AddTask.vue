@@ -5,7 +5,7 @@
         <button
             id="add-task"
             class="flex items-center justify-center w-8 h-8 mb-6 bg-gray-900 rounded-full"
-            @click="emitNewTask"
+            @click="addNewTask"
         >
             <svg
                 class="w-6 h-6 text-white fill-current"
@@ -26,7 +26,7 @@
                     class="bg-blue-400 rnd-btn hover:bg-blue-500"
                     id="blue"
                     value="1"
-                    @click="emitColour"
+                    @click="changeColour($event)"
                 ></button>
             </div>
             <div
@@ -37,7 +37,7 @@
                     class="bg-green-400 rnd-btn hover:bg-green-500"
                     id="blue"
                     value="2"
-                    @click="emitColour"
+                    @click="changeColour($event)"
                 ></button>
             </div>
             <div
@@ -48,7 +48,7 @@
                     class="bg-yellow-400 rnd-btn hover:bg-yellow-500"
                     id="blue"
                     value="3"
-                    @click="emitColour"
+                    @click="changeColour($event)"
                 ></button>
             </div>
         </div>
@@ -56,25 +56,55 @@
 </template>
 
 <script>
+import firebase from "../firebaseConfig.js";
+import { v4 as uuidv4 } from "uuid";
 import { eventBus } from "../main";
+
+const db = firebase.firestore();
 
 export default {
     name: "AddTask",
     data() {
         return {
-            selected: 1
+            selected: 1,
+            defaultTask: {
+                id: null,
+                title: "Title",
+                description: "Description",
+                completed: false,
+                colour: 1,
+                period: 1,
+                update: null
+            }
         };
     },
     methods: {
-        emitNewTask() {
-            eventBus.$emit("newTask", true);
+        changeColour(event) {
+            this.selected = parseInt(event.target.value);
+            this.defaultTask.colour = parseInt(event.target.value);
         },
-        emitColour(event) {
-            const selected = parseInt(event.target.value);
-            console.log(`selected colour: ${selected}`);
+        addNewTask() {
+            this.defaultTask.id = uuidv4();
+            this.defaultTask.update = Date.now();
 
-            this.selected = selected;
-            eventBus.$emit("selectedColour", selected);
+            const self = this;
+
+            if (
+                Object.values(this.defaultTask).every(value => value !== null)
+            ) {
+                eventBus.$emit("recentelyAdded", self.defaultTask.id);
+
+                db.collection("tasks")
+                    .doc(this.defaultTask.id)
+                    .set(this.defaultTask)
+                    .then(function() {
+                        console.log("Document successfully written!");
+                    })
+                    .catch(function(error) {
+                        console.error("Error writing document: ", error);
+                        eventBus.$emit("recentelyAdded", null);
+                    });
+            }
         }
     }
 };
