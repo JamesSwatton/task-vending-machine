@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap items-start pl-12">
+    <div class="flex flex-wrap items-start pl-12 pb-8">
         <task-app
             v-for="task in tasks"
             :task="task"
@@ -15,6 +15,7 @@ import Task from "../components/Task";
 import { eventBus } from "../main";
 
 const db = firebase.firestore();
+const allTasks = db.collection("tasks");
 
 export default {
     name: "Tasks",
@@ -24,16 +25,31 @@ export default {
     data() {
         return {
             tasks: [],
-            recentelyAdded: null
+            recentelyAdded: null,
+            selectedPeriod: 1
         };
     },
     firestore: {
-        tasks: db.collection("tasks").orderBy("update", "desc")
+        tasks: allTasks.orderBy("update", "desc")
     },
     created() {
         eventBus.$on("recentelyAdded", data => {
             this.recentelyAdded = data;
         });
+        eventBus.$on("selectedPeriod", data => {
+            this.selectedPeriod = data;
+        });
+    },
+    watch: {
+        selectedPeriod: {
+            immediate: true,
+            handler(selectedPeriod) {
+                this.$bind(
+                    "tasks",
+                    allTasks.where("period", "==", selectedPeriod)
+                );
+            }
+        }
     }
 };
 </script>

@@ -78,6 +78,11 @@ export default {
             }
         };
     },
+    created() {
+        eventBus.$on("selectedPeriod", data => {
+            this.defaultTask.period = data;
+        })
+    },
     methods: {
         changeColour(event) {
             this.selected = parseInt(event.target.value);
