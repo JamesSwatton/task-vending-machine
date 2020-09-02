@@ -52,10 +52,12 @@
                 ></button>
             </div>
         </div>
+        <btn-delete-app></btn-delete-app>
     </div>
 </template>
 
 <script>
+import BtnDeleteAll from "./buttons/BtnDeleteAll.vue";
 import firebase from "../firebaseConfig.js";
 import { v4 as uuidv4 } from "uuid";
 import { eventBus } from "../main";
@@ -64,6 +66,9 @@ const db = firebase.firestore();
 
 export default {
     name: "AddTask",
+    components: {
+        "btn-delete-app": BtnDeleteAll
+    },
     data() {
         return {
             selected: 1,
@@ -81,7 +86,7 @@ export default {
     created() {
         eventBus.$on("selectedPeriod", data => {
             this.defaultTask.period = data;
-        })
+        });
     },
     methods: {
         changeColour(event) {
