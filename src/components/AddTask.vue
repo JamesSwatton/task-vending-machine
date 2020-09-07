@@ -2,11 +2,11 @@
     <div
         class="fixed inline-flex flex-col items-center w-20 h-screen pt-20 bg-white border-r border-gray-300"
     >
-        <btn-add-app></btn-add-app>
+        <btn-add-app class="mb-6" @click.native="addNewTask"></btn-add-app>
         <div id="colour-select">
             <div
                 class="btn-container"
-                :class="{ 'border border-gray-900': selected === 1 }"
+                :class="{ 'border border-gray-800': selected === 1 }"
             >
                 <button
                     class="bg-blue-400 rnd-btn hover:bg-blue-500"
@@ -17,7 +17,7 @@
             </div>
             <div
                 class="btn-container"
-                :class="{ 'border border-gray-900': selected === 2 }"
+                :class="{ 'border border-gray-800': selected === 2 }"
             >
                 <button
                     class="bg-green-400 rnd-btn hover:bg-green-500"
@@ -28,7 +28,7 @@
             </div>
             <div
                 class="btn-container"
-                :class="{ 'border border-gray-900': selected === 3 }"
+                :class="{ 'border border-gray-800': selected === 3 }"
             >
                 <button
                     class="bg-yellow-400 rnd-btn hover:bg-yellow-500"
@@ -59,6 +59,7 @@ export default {
     },
     data() {
         return {
+            clicked: false,
             selected: 1,
             defaultTask: {
                 id: null,
@@ -77,11 +78,15 @@ export default {
         });
     },
     methods: {
+        doThing() {
+            console.log("hello")
+        },
         changeColour(event) {
             this.selected = parseInt(event.target.value);
             this.defaultTask.colour = parseInt(event.target.value);
         },
         addNewTask() {
+            console.log('hello')
             this.defaultTask.id = uuidv4();
             this.defaultTask.update = Date.now();
 

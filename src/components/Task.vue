@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative w-56 h-auto px-4 py-5 mb-6 mr-6 rounded-lg shadow-none group transition duration-200 ease-in-out hover:shadow-xl"
+        class="relative w-48 h-auto px-4 py-5 mb-6 mr-6 rounded-lg shadow-none group transition duration-200 ease-in-out hover:shadow-xl"
         :class="taskColour"
     >
         <button
@@ -9,7 +9,7 @@
             @click="deleteTask(task)"
         >
             <svg
-                class="w-5 h-5 text-gray-900 fill-current"
+                class="w-5 h-5 text-gray-800 fill-current"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
             >
@@ -28,26 +28,26 @@
         <div v-else>
             <input
                 type="text"
-                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-900 title focus:outline-none"
+                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-800 title focus:outline-none"
                 v-model="taskCopy.title"
                 v-focus
             />
             <input
                 type="text"
-                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-900 description focus:outline-none"
+                class="w-full bg-transparent border-b-2 border-transparent box-border focus:border-gray-800 description focus:outline-none"
                 v-model="taskCopy.description"
             />
         </div>
         <div id="edit" class="flex justify-end mt-2" v-if="!isRecentTask">
             <button
                 id="update"
-                class="flex items-center justify-center w-8 h-8 rounded-full"
-                :class="[updatingTask ? 'bg-white' : 'bg-gray-900']"
+                class="flex items-center justify-center w-8 h-8 mx-2 rounded-full"
+                :class="[updatingTask ? 'bg-white' : 'bg-gray-800']"
                 @click="updateTask"
             >
                 <svg
                     class="w-5 h-5 fill-current"
-                    :class="[updatingTask ? 'text-gray-900' : 'text-white']"
+                    :class="[updatingTask ? 'text-gray-800' : 'text-white']"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -58,13 +58,13 @@
             </button>
             <button
                 id="done"
-                class="flex items-center justify-center w-8 h-8 mx-1 rounded-full"
-                :class="[task.completed ? 'bg-white' : 'bg-gray-900']"
+                class="flex items-center justify-center w-8 h-8 rounded-full"
+                :class="[task.completed ? 'bg-white' : 'bg-gray-800']"
                 @click="updateStatus(task)"
             >
                 <svg
                     class="w-6 h-6 text-white fill-current"
-                    :class="[task.completed ? 'text-gray-900' : 'text-white']"
+                    :class="[task.completed ? 'text-gray-800' : 'text-white']"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -76,7 +76,7 @@
         </div>
         <div id="add" class="flex justify-end mt-2" v-else>
             <button
-                class="flex items-center justify-center w-8 h-8 bg-gray-900 rounded-full"
+                class="flex items-center justify-center w-8 h-8 bg-gray-800 rounded-full"
                 @click="updateTask"
             >
                 <svg
@@ -190,11 +190,11 @@ export default {
 
 <style>
 .title {
-    @apply text-2xl pt-0 mb-2 text-gray-900;
+    @apply text-2xl pt-0 mb-2 text-gray-800;
 }
 
 .description {
-    @apply text-sm font-thin text-gray-900;
+    @apply text-sm font-thin text-gray-800;
 }
 
 .blue {

@@ -1,8 +1,7 @@
 <template>
     <button
         id="add-task"
-        class="flex items-center justify-center w-8 h-8 mb-6 bg-gray-900 rounded-full"
-        @click="addNewTask"
+        class="flex items-center justify-center w-8 h-8 bg-gray-800 rounded-full"
     >
         <svg
             class="w-6 h-6 text-white fill-current"

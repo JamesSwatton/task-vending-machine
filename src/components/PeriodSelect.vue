@@ -55,6 +55,6 @@ export default {
 }
 
 .current {
-    @apply text-gray-900 text-5xl font-semibold;
+    @apply text-gray-800 text-5xl font-semibold;
 }
 </style>

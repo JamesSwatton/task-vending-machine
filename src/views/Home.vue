@@ -10,6 +10,7 @@
                     class="fixed bottom-0 w-full h-24 bg-gradient-to-t from-white to-transparent"
                 ></div>
             </div>
+            <habits-app></habits-app>
         </div>
     </div>
 </template>
@@ -18,13 +19,15 @@
 import AddTask from "../components/AddTask";
 import PeriodSelect from "../components/PeriodSelect";
 import Tasks from "../components/Tasks";
+import Habits from "../components/Habits";
 
 export default {
     name: "Tasks",
     components: {
         "add-task-app": AddTask,
         "period-select-app": PeriodSelect,
-        "tasks-app": Tasks
+        "tasks-app": Tasks,
+        "habits-app": Habits
     }
 };
 </script>
