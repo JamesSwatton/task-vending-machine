@@ -30,8 +30,10 @@ export default {
 </script>
 
 <style>
+#habits {
+    min-width: 420px;
+}
 .habit-heading {
-    width: 355px;
     @apply flex py-2 justify-between items-center border-b border-gray-500;
 }
 </style>

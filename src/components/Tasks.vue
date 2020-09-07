@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap items-start pl-12 pb-8">
+    <div class="flex flex-wrap items-start pb-8 pl-12">
         <task-app
             v-for="task in tasks"
             :task="task"
