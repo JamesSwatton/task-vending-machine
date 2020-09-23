@@ -15,7 +15,6 @@ import Task from "../components/Task";
 import { eventBus } from "../main";
 
 const db = firebase.firestore();
-const allTasks = db.collection("tasks");
 
 export default {
     name: "Tasks",
@@ -30,7 +29,7 @@ export default {
         };
     },
     firestore: {
-        tasks: allTasks.orderBy("update", "desc")
+        tasks: db.collection("tasks").orderBy("update", "desc")
     },
     created() {
         eventBus.$on("recentelyAdded", data => {
@@ -46,7 +45,7 @@ export default {
             handler(selectedPeriod) {
                 this.$bind(
                     "tasks",
-                    allTasks.where("period", "==", selectedPeriod)
+                    db.collection("tasks").where("period", "==", selectedPeriod)
                 );
             }
         }

@@ -17,14 +17,29 @@
 </template>
 
 <script>
+import firebase from "../firebaseConfig";
 import BtnAdd from "../components/buttons/BtnAdd";
 import Habit from "../components/Habit";
+
+const db = firebase.firestore();
 
 export default {
     name: "Habits",
     components: {
         "btn-add-app": BtnAdd,
         "habit-app": Habit
+    },
+    data() {
+        return {
+            daily: [],
+            weekly: [],
+            monthly: []
+        };
+    },
+    firestore: {
+        daily: db.collection("habits").where("period", "==", 1),
+        weekly: db.collection("habits").where("period", "==", 2),
+        monthly: db.collection("habits").where("period", "==", 3)
     }
 };
 </script>

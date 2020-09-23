@@ -49,7 +49,7 @@ export default {
         return {
             defaultHabit: {
                 title: "drink more water",
-                frequency: 0,
+                period: 0,
                 count: 0,
                 max: 13,
                 id: null,
