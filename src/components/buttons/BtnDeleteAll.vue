@@ -1,9 +1,6 @@
 <template>
     <div>
-        <button
-            class="flex items-center justify-center w-6 h-6 mt-6"
-            @click="deleteCompletedTasks"
-        >
+        <button class="flex items-center justify-center w-6 h-6">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="w-6 h-6 text-gray-800 fill-current"
@@ -19,36 +16,5 @@
 </template>
 
 <script>
-import firebase from "../../firebaseConfig.js";
-import { eventBus } from "../../main";
-
-const db = firebase.firestore();
-
-export default {
-    data() {
-        return {
-            selectedPeriod: 1
-        };
-    },
-    created() {
-        eventBus.$on("selectedPeriod", data => {
-            this.selectedPeriod = data;
-        });
-    },
-    methods: {
-        deleteCompletedTasks() {
-            const taskQuery = db
-                .collection("tasks")
-                .where("period", "==", this.selectedPeriod)
-                .where("completed", "==", true);
-
-            taskQuery.get().then(querySnapshot => {
-                console.log("got documents");
-                querySnapshot.forEach(doc => {
-                    doc.ref.delete();
-                });
-            });
-        }
-    }
-};
+export default {};
 </script>

@@ -38,7 +38,10 @@
                 ></button>
             </div>
         </div>
-        <btn-delete-app></btn-delete-app>
+        <btn-delete-app
+            class="mt-6"
+            @click.native="deleteCompletedTasks"
+        ></btn-delete-app>
     </div>
 </template>
 
@@ -67,26 +70,30 @@ export default {
                 description: "Description",
                 completed: false,
                 colour: 1,
-                period: 1,
+                period: null,
                 update: null
-            }
+            },
+            selectedPeriod: 1
         };
     },
     created() {
         eventBus.$on("selectedPeriod", data => {
-            this.defaultTask.period = data;
+            this.selectedPeriod = data;
         });
+        this.defaultTask.period = this.selectedPeriod;
+    },
+    watch: {
+        selectedPeriod() {
+            this.defaultTask.period = this.selectedPeriod;
+        }
     },
     methods: {
-        doThing() {
-            console.log("hello")
-        },
         changeColour(event) {
             this.selected = parseInt(event.target.value);
             this.defaultTask.colour = parseInt(event.target.value);
         },
         addNewTask() {
-            console.log('hello')
+            console.log("hello");
             this.defaultTask.id = uuidv4();
             this.defaultTask.update = Date.now();
 
@@ -95,7 +102,7 @@ export default {
             if (
                 Object.values(this.defaultTask).every(value => value !== null)
             ) {
-                eventBus.$emit("recentelyAdded", self.defaultTask.id);
+                eventBus.$emit("recentlyAdded", self.defaultTask.id);
 
                 db.collection("tasks")
                     .doc(this.defaultTask.id)
@@ -105,9 +112,22 @@ export default {
                     })
                     .catch(function(error) {
                         console.error("Error writing document: ", error);
-                        eventBus.$emit("recentelyAdded", null);
+                        eventBus.$emit("recentlyAdded", null);
                     });
             }
+        },
+        deleteCompletedTasks() {
+            const taskQuery = db
+                .collection("tasks")
+                .where("period", "==", this.selectedPeriod)
+                .where("completed", "==", true);
+
+            taskQuery.get().then(querySnapshot => {
+                console.log("got documents");
+                querySnapshot.forEach(doc => {
+                    doc.ref.delete();
+                });
+            });
         }
     }
 };

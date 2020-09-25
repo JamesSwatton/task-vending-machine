@@ -3,7 +3,7 @@
         <task-app
             v-for="task in tasks"
             :task="task"
-            :recentelyAdded="recentelyAdded"
+            :recentlyAdded="recentlyAdded"
             :key="task.id"
         ></task-app>
     </div>
@@ -24,16 +24,17 @@ export default {
     data() {
         return {
             tasks: [],
-            recentelyAdded: null,
+            recentlyAdded: null,
             selectedPeriod: 1
         };
     },
-    firestore: {
-        tasks: db.collection("tasks").orderBy("update", "desc")
-    },
     created() {
-        eventBus.$on("recentelyAdded", data => {
-            this.recentelyAdded = data;
+        this.$bind(
+            "tasks",
+            db.collection("tasks").where("period", "==", this.selectedPeriod)
+        );
+        eventBus.$on("recentlyAdded", data => {
+            this.recentlyAdded = data;
         });
         eventBus.$on("selectedPeriod", data => {
             this.selectedPeriod = data;

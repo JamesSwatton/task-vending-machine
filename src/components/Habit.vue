@@ -6,11 +6,11 @@
                     id="habit-count"
                     class="max-h-full px-5 text-lg font-light leading-tight text-white bg-blue-400 rounded-full"
                 >
-                    {{ defaultHabit.count }} / {{ defaultHabit.max }}
+                    {{ habit.count }} / {{ habit.max }}
                 </p>
             </div>
             <p id="habit-title" class="px-4 text-lg font-light text-gray-900">
-                {{ defaultHabit.title }}
+                {{ habit.title }}
             </p>
         </div>
         <div id="update-habit" class="flex items-center">
@@ -38,24 +38,51 @@
                     />
                 </svg>
             </button>
+            <btn-delete-app
+                class="ml-2"
+                @click.native="deleteHabit(habit)"
+            ></btn-delete-app>
         </div>
     </div>
 </template>
 
 <script>
+import firebase from "../firebaseConfig";
+import BtnDeleteAll from "./buttons/BtnDeleteAll";
+
+const db = firebase.firestore();
+
 export default {
     name: "Habit",
+    props: ["habit"],
+    components: {
+        "btn-delete-app": BtnDeleteAll
+    },
     data() {
         return {
             defaultHabit: {
                 title: "drink more water",
-                period: 0,
+                period: null,
                 count: 0,
                 max: 13,
                 id: null,
                 updatedAt: null
-            }
+            },
+            isSelected: false
         };
+    },
+    methods: {
+        deleteHabit(habit) {
+            db.collection("habits")
+                .doc(habit.id)
+                .delete()
+                .then(function() {
+                    console.log("Document successfully deleted!");
+                })
+                .catch(function(error) {
+                    console.error("Error removing document: ", error);
+                });
+        }
     }
 };
 </script>

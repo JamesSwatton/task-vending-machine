@@ -101,7 +101,7 @@ const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task", "recentelyAdded"],
+    props: ["task", "recentlyAdded"],
     directives: {
         focus: {
             inserted(el) {
@@ -121,7 +121,7 @@ export default {
             return this.colours[this.task.colour - 1];
         },
         isRecentTask() {
-            return this.recentelyAdded == this.taskCopy.id;
+            return this.recentlyAdded == this.taskCopy.id;
         }
     },
     created() {
@@ -141,7 +141,7 @@ export default {
                     .update(this.taskCopy)
                     .then(function() {
                         console.log("Document successfully updated!");
-                        eventBus.$emit("recentelyAdded", null);
+                        eventBus.$emit("recentlyAdded", null);
                     })
                     .catch(function(error) {
                         // The document probably doesn't exist.
