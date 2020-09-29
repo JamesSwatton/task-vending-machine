@@ -4,6 +4,7 @@
             v-for="task in tasks"
             :task="task"
             :recentlyAdded="recentlyAdded"
+            :id="task.id"
             :key="task.id"
         ></task-app>
     </div>
@@ -28,12 +29,14 @@ export default {
             selectedPeriod: 1
         };
     },
+    firestore: {
+        tasks: db
+            .collection("tasks")
+            .orderBy("update", "desc")
+            .where("period", "==", 1)
+    },
     created() {
-        this.$bind(
-            "tasks",
-            db.collection("tasks").where("period", "==", this.selectedPeriod)
-        );
-        eventBus.$on("recentlyAdded", data => {
+        eventBus.$on("recentlyAddedTask", data => {
             this.recentlyAdded = data;
         });
         eventBus.$on("selectedPeriod", data => {
@@ -46,7 +49,10 @@ export default {
             handler(selectedPeriod) {
                 this.$bind(
                     "tasks",
-                    db.collection("tasks").where("period", "==", selectedPeriod)
+                    db
+                        .collection("tasks")
+                        .orderBy("update", "desc")
+                        .where("period", "==", selectedPeriod)
                 );
             }
         }

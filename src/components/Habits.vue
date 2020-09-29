@@ -35,12 +35,12 @@ export default {
     },
     data() {
         return {
+            recentlyAdded: null,
             defaultHabit: {
                 title: "drink more water",
                 period: null,
                 count: 0,
                 max: 13,
-                id: null,
                 updatedAt: null
             },
             daily: [],
@@ -55,13 +55,18 @@ export default {
     },
     methods: {
         addNewHabit(period) {
-            console.log("new habit");
+            const self = this;
             this.defaultHabit.period = period;
+            this.defaultHabit.updatedAt = Date.now();
 
             db.collection("habits")
                 .add(this.defaultHabit)
-                .then(function() {
-                    console.log("Document successfully written!");
+                .then(function(docRef) {
+                    self.recentlyAdded = docRef.id;
+                    console.log(
+                        "Document successfully written with id: ",
+                        docRef.id
+                    );
                 })
                 .catch(function(error) {
                     console.error("Error writing document: ", error);

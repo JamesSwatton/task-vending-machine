@@ -49,7 +49,6 @@
 import BtnDeleteAll from "./buttons/BtnDeleteAll.vue";
 import BtnAdd from "./buttons/BtnAdd.vue";
 import firebase from "../firebaseConfig.js";
-import { v4 as uuidv4 } from "uuid";
 import { eventBus } from "../main";
 
 const db = firebase.firestore();
@@ -65,7 +64,6 @@ export default {
             clicked: false,
             selected: 1,
             defaultTask: {
-                id: null,
                 title: "Title",
                 description: "Description",
                 completed: false,
@@ -93,28 +91,17 @@ export default {
             this.defaultTask.colour = parseInt(event.target.value);
         },
         addNewTask() {
-            console.log("hello");
-            this.defaultTask.id = uuidv4();
             this.defaultTask.update = Date.now();
-
-            const self = this;
-
-            if (
-                Object.values(this.defaultTask).every(value => value !== null)
-            ) {
-                eventBus.$emit("recentlyAdded", self.defaultTask.id);
-
-                db.collection("tasks")
-                    .doc(this.defaultTask.id)
-                    .set(this.defaultTask)
-                    .then(function() {
-                        console.log("Document successfully written!");
-                    })
-                    .catch(function(error) {
-                        console.error("Error writing document: ", error);
-                        eventBus.$emit("recentlyAdded", null);
-                    });
-            }
+            db.collection("tasks")
+                .add(this.defaultTask)
+                .then(function(docRef) {
+                    console.log("Document successfully written!");
+                    eventBus.$emit("recentlyAddedTask", docRef.id);
+                })
+                .catch(function(error) {
+                    console.error("Error writing document: ", error);
+                    eventBus.$emit("recentlyAdded", null);
+                });
         },
         deleteCompletedTasks() {
             const taskQuery = db
@@ -122,12 +109,16 @@ export default {
                 .where("period", "==", this.selectedPeriod)
                 .where("completed", "==", true);
 
-            taskQuery.get().then(querySnapshot => {
-                console.log("got documents");
-                querySnapshot.forEach(doc => {
-                    doc.ref.delete();
+            taskQuery
+                .get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                        doc.ref.delete();
+                    });
+                })
+                .then(function() {
+                    console.log("Documents successfully deleted!");
                 });
-            });
         }
     }
 };

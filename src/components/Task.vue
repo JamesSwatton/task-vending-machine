@@ -101,7 +101,7 @@ const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task", "recentlyAdded"],
+    props: ["task", "recentlyAdded", "id"],
     directives: {
         focus: {
             inserted(el) {
@@ -121,27 +121,29 @@ export default {
             return this.colours[this.task.colour - 1];
         },
         isRecentTask() {
-            return this.recentlyAdded == this.taskCopy.id;
+            return this.recentlyAdded == this.id;
+        }
+    },
+    watch: {
+        isRecentTask() {
+            if (this.isRecentTask) {
+                this.updatingTask = true;
+            }
         }
     },
     created() {
         this.taskCopy = { ...this.task };
-    },
-    mounted() {
-        if (this.isRecentTask) {
-            this.updatingTask = true;
-        }
     },
     methods: {
         updateTask() {
             if (this.updatingTask) {
                 this.taskCopy.update = Date.now();
                 db.collection("tasks")
-                    .doc(this.taskCopy.id)
+                    .doc(this.id)
                     .update(this.taskCopy)
                     .then(function() {
                         console.log("Document successfully updated!");
-                        eventBus.$emit("recentlyAdded", null);
+                        eventBus.$emit("recentlyAddedTask", null);
                     })
                     .catch(function(error) {
                         // The document probably doesn't exist.
