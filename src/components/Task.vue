@@ -101,7 +101,7 @@ const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task", "recentlyAdded", "id"],
+    props: ["task", "recentlyAddedId", "id"],
     directives: {
         focus: {
             inserted(el) {
@@ -121,7 +121,7 @@ export default {
             return this.colours[this.task.colour - 1];
         },
         isRecentTask() {
-            return this.recentlyAdded == this.id;
+            return this.recentlyAddedId == this.id;
         }
     },
     watch: {

@@ -6,7 +6,7 @@
                     id="habit-count"
                     class="max-h-full px-5 text-lg font-light leading-tight text-white bg-blue-400 rounded-full"
                 >
-                    {{ habit.count }} / {{ habit.max }}
+                    {{ habitCopy.count }} / {{ habitCopy.max }}
                 </p>
             </div>
             <p id="habit-title" class="px-4 text-lg font-light text-gray-900">
@@ -14,7 +14,7 @@
             </p>
         </div>
         <div id="update-habit" class="flex items-center">
-            <button id="decrease">
+            <button id="decrease" @click="decrease">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -26,7 +26,7 @@
                     />
                 </svg>
             </button>
-            <button id="increase">
+            <button id="increase" @click="increase">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-6 h-6 text-gray-500 fill-current hover:text-gray-800"
@@ -38,10 +38,21 @@
                     />
                 </svg>
             </button>
-            <btn-delete-app
-                class="ml-2"
-                @click.native="deleteHabit(habit)"
-            ></btn-delete-app>
+            <button
+                id="update"
+                class="flex items-center justify-center w-6 h-6 bg-transparent rounded-full"
+            >
+                <svg
+                    class="w-5 h-5 fill-current"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                    />
+                </svg>
+            </button>
+            <btn-delete-app @click.native="deleteHabit(habit)"></btn-delete-app>
         </div>
     </div>
 </template>
@@ -54,24 +65,46 @@ const db = firebase.firestore();
 
 export default {
     name: "Habit",
-    props: ["habit"],
+    props: ["habit", "recentlyAddedId", "id"],
     components: {
         "btn-delete-app": BtnDeleteAll
     },
     data() {
         return {
-            defaultHabit: {
-                title: "drink more water",
-                period: null,
-                count: 0,
-                max: 13,
-                id: null,
-                updatedAt: null
-            },
-            isSelected: false
+            habitCopy: {},
+            updatingHabit: false
         };
     },
+    computed: {
+        isRecentHabit() {
+            return this.id == this.recentlyAddedId;
+        }
+    },
+    watch: {
+        isRecentHabit() {
+            if (this.isRecentHabit) {
+                this.updatingHabit = true;
+            }
+        }
+    },
+    created() {
+        this.habitCopy = { ...this.habit };
+    },
     methods: {
+        increase() {
+            if (this.updatingHabit) {
+                this.habitCopy.max++;
+            } else {
+                this.habitCopy.count++;
+            }
+        },
+        decrease() {
+            if (this.updatingHabit && this.habitCopy.max > 0) {
+                this.habitCopy.max--;
+            } else if (!this.updatingHabit && this.habitCopy.count > 0) {
+                this.habitCopy.count--;
+            }
+        },
         deleteHabit(habit) {
             db.collection("habits")
                 .doc(habit.id)

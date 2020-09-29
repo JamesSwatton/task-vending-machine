@@ -8,6 +8,8 @@
             v-for="dailyHabit in daily"
             :key="dailyHabit.id"
             :habit="dailyHabit"
+            :recentlyAddedId="recentlyAddedId"
+            :id="dailyHabit.id"
         ></habit-app>
         <div id="weekly" class="habit-heading">
             <p class="text-3xl text-gray-800">Weekly</p>
@@ -35,12 +37,13 @@ export default {
     },
     data() {
         return {
-            recentlyAdded: null,
+            recentlyAddedId: null,
             defaultHabit: {
-                title: "drink more water",
+                title: "Title",
                 period: null,
                 count: 0,
-                max: 13,
+                max: 0,
+                id: null,
                 updatedAt: null
             },
             daily: [],
@@ -62,7 +65,7 @@ export default {
             db.collection("habits")
                 .add(this.defaultHabit)
                 .then(function(docRef) {
-                    self.recentlyAdded = docRef.id;
+                    self.recentlyAddedId = docRef.id;
                     console.log(
                         "Document successfully written with id: ",
                         docRef.id

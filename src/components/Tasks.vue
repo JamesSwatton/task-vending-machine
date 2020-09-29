@@ -3,7 +3,7 @@
         <task-app
             v-for="task in tasks"
             :task="task"
-            :recentlyAdded="recentlyAdded"
+            :recentlyAddedId="recentlyAddedId"
             :id="task.id"
             :key="task.id"
         ></task-app>
@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             tasks: [],
-            recentlyAdded: null,
+            recentlyAddedId: null,
             selectedPeriod: 1
         };
     },
@@ -37,7 +37,7 @@ export default {
     },
     created() {
         eventBus.$on("recentlyAddedTask", data => {
-            this.recentlyAdded = data;
+            this.recentlyAddedId = data;
         });
         eventBus.$on("selectedPeriod", data => {
             this.selectedPeriod = data;

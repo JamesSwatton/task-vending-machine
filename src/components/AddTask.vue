@@ -100,7 +100,7 @@ export default {
                 })
                 .catch(function(error) {
                     console.error("Error writing document: ", error);
-                    eventBus.$emit("recentlyAdded", null);
+                    eventBus.$emit("recentlyAddedTask", null);
                 });
         },
         deleteCompletedTasks() {
