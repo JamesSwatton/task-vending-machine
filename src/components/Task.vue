@@ -190,7 +190,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .title {
     @apply text-2xl pt-0 mb-2 text-gray-800;
 }

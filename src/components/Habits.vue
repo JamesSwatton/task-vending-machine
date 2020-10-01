@@ -26,6 +26,7 @@
 import firebase from "../firebaseConfig";
 import BtnAdd from "../components/buttons/BtnAdd";
 import Habit from "../components/Habit";
+import { eventBus } from "../main.js";
 
 const db = firebase.firestore();
 
@@ -75,6 +76,11 @@ export default {
                     console.error("Error writing document: ", error);
                 });
         }
+    },
+    created() {
+        eventBus.$on("recentlyAddedHabit", data => {
+            this.recentlyAddedId = data;
+        });
     }
 };
 </script>

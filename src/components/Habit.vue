@@ -3,17 +3,24 @@
         <div class="flex items-center">
             <div class="flex items-center flex-shrink-0 h-6">
                 <p
-                    id="habit-count"
+                    id="count"
                     class="max-h-full px-5 text-lg font-light leading-tight text-white bg-blue-400 rounded-full"
                 >
                     {{ habitCopy.count }} / {{ habitCopy.max }}
                 </p>
             </div>
-            <p id="habit-title" class="px-4 text-lg font-light text-gray-900">
+            <p id="title" class="title" v-if="!updatingHabit">
                 {{ habit.title }}
             </p>
+            <input
+                type="text"
+                class="bg-transparent border-b-2 border-transparent width title box-border focus:border-gray-800 focus:outline-none"
+                v-model="habitCopy.title"
+                v-focus
+                v-else
+            />
         </div>
-        <div id="update-habit" class="flex items-center">
+        <div id="edit" class="flex items-center">
             <button id="decrease" @click="decrease">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -40,10 +47,13 @@
             </button>
             <button
                 id="update"
-                class="flex items-center justify-center w-6 h-6 bg-transparent rounded-full"
+                class="flex items-center justify-center w-6 h-6 rounded-full"
+                :class="[updatingHabit ? 'bg-gray-800' : 'bg-transparent']"
+                @click="updateHabit"
             >
                 <svg
                     class="w-5 h-5 fill-current"
+                    :class="[updatingHabit ? 'text-white' : 'text-gray-800']"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                 >
@@ -60,12 +70,20 @@
 <script>
 import firebase from "../firebaseConfig";
 import BtnDeleteAll from "./buttons/BtnDeleteAll";
+import { eventBus } from "../main";
 
 const db = firebase.firestore();
 
 export default {
     name: "Habit",
     props: ["habit", "recentlyAddedId", "id"],
+    directives: {
+        focus: {
+            inserted(el) {
+                el.focus();
+            }
+        }
+    },
     components: {
         "btn-delete-app": BtnDeleteAll
     },
@@ -94,7 +112,10 @@ export default {
         increase() {
             if (this.updatingHabit) {
                 this.habitCopy.max++;
-            } else {
+            } else if (
+                !this.updatingHabit &&
+                this.habitCopy.count < this.habitCopy.max
+            ) {
                 this.habitCopy.count++;
             }
         },
@@ -104,6 +125,23 @@ export default {
             } else if (!this.updatingHabit && this.habitCopy.count > 0) {
                 this.habitCopy.count--;
             }
+        },
+        updateHabit() {
+            if (this.updatingHabit) {
+                this.habitCopy.updatedAt = Date.now();
+                db.collection("habits")
+                    .doc(this.id)
+                    .update(this.habitCopy)
+                    .then(function() {
+                        console.log("Document successfully updated!");
+                        eventBus.$emit("recentlyAddedHabit", null);
+                    })
+                    .catch(function(error) {
+                        // The document probably doesn't exist.
+                        console.error("Error updating document: ", error);
+                    });
+            }
+            this.updatingHabit = !this.updatingHabit;
         },
         deleteHabit(habit) {
             db.collection("habits")
@@ -119,3 +157,12 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.title {
+    @apply mx-4 text-lg font-light text-gray-900;
+}
+.width {
+    width: 162px;
+}
+</style>
