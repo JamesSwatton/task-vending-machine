@@ -107,6 +107,7 @@ export default {
     },
     created() {
         this.habitCopy = { ...this.habit };
+        this.habitReset();
     },
     methods: {
         increase() {
@@ -117,6 +118,7 @@ export default {
                 this.habitCopy.count < this.habitCopy.max
             ) {
                 this.habitCopy.count++;
+                this.updateCount(this.habitCopy.count);
             }
         },
         decrease() {
@@ -124,6 +126,32 @@ export default {
                 this.habitCopy.max--;
             } else if (!this.updatingHabit && this.habitCopy.count > 0) {
                 this.habitCopy.count--;
+                this.updateCount(this.habitCopy.count);
+            }
+        },
+        updateCount(newCount) {
+            db.collection("habits")
+                .doc(this.id)
+                .update({ count: newCount, updatedAt: Date.now() })
+                .then(function() {
+                    console.log("Habit count successfully updated!");
+                });
+        },
+        habitReset() {
+            const today = new Date();
+            if (this.habit.period == 1) {
+                const habitDay = new Date(this.habit.updatedAt).getDate();
+                console.log(
+                    "today: " + today.getDate(),
+                    "habit day: " + habitDay
+                );
+                if (today.getDate() !== habitDay) {
+                    this.updateCount(0);
+                }
+            } else if (this.habit.period == 2) {
+                if (today.getDay() == 0) {
+                    this.updateCount(0);
+                }
             }
         },
         updateHabit() {

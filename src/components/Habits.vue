@@ -15,10 +15,24 @@
             <p class="text-3xl text-gray-800">Weekly</p>
             <btn-add-app @click.native="addNewHabit(2)"></btn-add-app>
         </div>
+        <habit-app
+            v-for="weeklyHabit in weekly"
+            :key="weeklyHabit.id"
+            :habit="weeklyHabit"
+            :recentlyAddedId="recentlyAddedId"
+            :id="weeklyHabit.id"
+        ></habit-app>
         <div id="monthly" class="habit-heading">
             <p class="text-3xl text-gray-800">Monthly</p>
             <btn-add-app @click.native="addNewHabit(3)"></btn-add-app>
         </div>
+        <habit-app
+            v-for="monthlyHabit in monthly"
+            :key="monthlyHabit.id"
+            :habit="monthlyHabit"
+            :recentlyAddedId="recentlyAddedId"
+            :id="monthlyHabit.id"
+        ></habit-app>
     </div>
 </template>
 
@@ -42,6 +56,7 @@ export default {
             defaultHabit: {
                 title: "Title",
                 period: null,
+                resetDate: null,
                 count: 0,
                 max: 0,
                 id: null,
@@ -60,6 +75,14 @@ export default {
     methods: {
         addNewHabit(period) {
             const self = this;
+            if (period == 2) {
+                var d = new Date();
+                var nextMonday = 7 - (d.getDay() + 1);
+                console.log("next monday: " + nextMonday);
+                this.defaultHabit.resetDate = d.setDate(
+                    d.getDate() + nextMonday
+                );
+            }
             this.defaultHabit.period = period;
             this.defaultHabit.updatedAt = Date.now();
 
