@@ -56,7 +56,7 @@ export default {
             defaultHabit: {
                 title: "Title",
                 period: null,
-                resetDate: null,
+                resetTime: null,
                 count: 0,
                 max: 0,
                 id: null,
@@ -75,14 +75,19 @@ export default {
     methods: {
         addNewHabit(period) {
             const self = this;
-            if (period == 2) {
-                var d = new Date();
-                var nextMonday = 7 - (d.getDay() + 1);
-                console.log("next monday: " + nextMonday);
-                this.defaultHabit.resetDate = d.setDate(
-                    d.getDate() + nextMonday
-                );
+            var d = new Date();
+            var resetTime;
+            if (period == 1) {
+                d.setDate(d.getDate() + 1);
+                d.setHours(1, 0, 0);
+                resetTime = d.getTime();
+            } else if (period == 2) {
+                var daysUntilNextMonday = 8 - d.getDay();
+                d.setDate(d.getDate() + daysUntilNextMonday);
+                d.setHours(1, 0, 0);
+                resetTime = d.getTime();
             }
+            this.defaultHabit.resetTime = resetTime;
             this.defaultHabit.period = period;
             this.defaultHabit.updatedAt = Date.now();
 

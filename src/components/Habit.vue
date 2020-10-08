@@ -137,20 +137,32 @@ export default {
                     console.log("Habit count successfully updated!");
                 });
         },
+        newResetTime(period) {
+            var d = new Date();
+            var resetTime;
+            if (period == 1) {
+                d.setDate(d.getDate() + 1);
+                d.setHours(1, 0, 0);
+                resetTime = d.getTime();
+            } else if (period == 2) {
+                var daysUntilNextMonday = 8 - d.getDay();
+                d.setDate(d.getDate() + daysUntilNextMonday);
+                d.setHours(1, 0, 0);
+                resetTime = d.getTime();
+            }
+
+            db.collection("habits")
+                .doc(this.id)
+                .update({
+                    count: 0,
+                    updatedAt: Date.now(),
+                    resetTime: resetTime
+                });
+        },
         habitReset() {
-            const today = new Date();
             if (this.habit.period == 1) {
-                const habitDay = new Date(this.habit.updatedAt).getDate();
-                console.log(
-                    "today: " + today.getDate(),
-                    "habit day: " + habitDay
-                );
-                if (today.getDate() !== habitDay) {
-                    this.updateCount(0);
-                }
-            } else if (this.habit.period == 2) {
-                if (today.getDay() == 0) {
-                    this.updateCount(0);
+                if (Date.now() > this.habit.resetTime) {
+                    this.newResetTime(1);
                 }
             }
         },
