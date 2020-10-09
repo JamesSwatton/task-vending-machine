@@ -60,7 +60,8 @@ export default {
                 count: 0,
                 max: 0,
                 id: null,
-                updatedAt: null
+                updatedAt: null,
+                createdAt: null
             },
             daily: [],
             weekly: [],
@@ -68,9 +69,9 @@ export default {
         };
     },
     firestore: {
-        daily: db.collection("habits").where("period", "==", 1),
-        weekly: db.collection("habits").where("period", "==", 2),
-        monthly: db.collection("habits").where("period", "==", 3)
+        daily: db.collection("habits").orderBy("createdAt").where("period", "==", 1),
+        weekly: db.collection("habits").orderBy("createdAt").where("period", "==", 2),
+        monthly: db.collection("habits").orderBy("createdAt").where("period", "==", 3)
     },
     methods: {
         addNewHabit(period) {

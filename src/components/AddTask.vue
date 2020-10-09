@@ -69,7 +69,8 @@ export default {
                 completed: false,
                 colour: 1,
                 period: null,
-                update: null
+                updatedAt: null,
+                createdAt: null
             },
             selectedPeriod: 1
         };
@@ -91,7 +92,9 @@ export default {
             this.defaultTask.colour = parseInt(event.target.value);
         },
         addNewTask() {
-            this.defaultTask.update = Date.now();
+            console.log(this.defaultTask.createdAt);
+            this.defaultTask.createdAt = Date.now();
+            this.defaultTask.updatedAt = Date.now();
             db.collection("tasks")
                 .add(this.defaultTask)
                 .then(function(docRef) {

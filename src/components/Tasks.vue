@@ -32,7 +32,7 @@ export default {
     firestore: {
         tasks: db
             .collection("tasks")
-            .orderBy("update", "desc")
+            .orderBy("createdAt", "desc")
             .where("period", "==", 1)
     },
     created() {
@@ -51,7 +51,7 @@ export default {
                     "tasks",
                     db
                         .collection("tasks")
-                        .orderBy("update", "desc")
+                        .orderBy("createdAt", "desc")
                         .where("period", "==", selectedPeriod)
                 );
             }

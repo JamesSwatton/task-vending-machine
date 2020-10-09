@@ -137,7 +137,7 @@ export default {
     methods: {
         updateTask() {
             if (this.updatingTask) {
-                this.taskCopy.update = Date.now();
+                this.taskCopy.updatedAt = Date.now();
                 db.collection("tasks")
                     .doc(this.id)
                     .update(this.taskCopy)
@@ -178,7 +178,7 @@ export default {
         },
         resetForm() {
             for (let key in this.newTask) {
-                const resetKeys = ["title", "description", "update"];
+                const resetKeys = ["title", "description", "updatedAt"];
                 if (resetKeys.includes(key)) {
                     this.newTask[key] = null;
                 }
