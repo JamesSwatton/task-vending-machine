@@ -86,6 +86,10 @@ export default {
                 d.setDate(d.getDate() + daysUntilNextMonday);
                 d.setHours(1, 0, 0);
                 resetTime = d.getTime();
+            } else if (period == 3) {
+                console.log(d.getMonth() + 1);
+                var nextMonth = d.getMonth() + 1;
+                resetTime = nextMonth;
             }
             this.defaultHabit.resetTime = resetTime;
             this.defaultHabit.period = period;

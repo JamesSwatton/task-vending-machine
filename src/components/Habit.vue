@@ -138,6 +138,7 @@ export default {
                 });
         },
         newResetTime(period) {
+            console.log("poop");
             var d = new Date();
             var resetTime;
             if (period == 1) {
@@ -149,6 +150,9 @@ export default {
                 d.setDate(d.getDate() + daysUntilNextMonday);
                 d.setHours(1, 0, 0);
                 resetTime = d.getTime();
+            } else if (period == 3) {
+                var nextMonth = d.getMonth() + 1;
+                resetTime = nextMonth;
             }
 
             db.collection("habits")
@@ -160,10 +164,19 @@ export default {
                 });
         },
         habitReset() {
-            if (this.habit.period == 1) {
-                if (Date.now() > this.habit.resetTime) {
-                    this.newResetTime(1);
-                }
+            const d = new Date();
+            if (this.habit.period == 1 && Date.now() > this.habit.resetTime) {
+                this.newResetTime(1);
+            } else if (
+                this.habit.period == 2 &&
+                Date.now() > this.habit.resetTime
+            ) {
+                this.newResetTime(2);
+            } else if (
+                this.habit.period == 3 &&
+                d.getMonth() > this.habit.resetTime
+            ) {
+                this.newResetTime(3);
             }
         },
         updateHabit() {
