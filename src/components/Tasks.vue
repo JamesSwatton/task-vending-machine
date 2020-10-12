@@ -1,18 +1,28 @@
 <template>
-    <div class="flex flex-wrap items-start pb-8 pl-12">
-        <task-app
-            v-for="task in tasks"
-            :task="task"
-            :recentlyAddedId="recentlyAddedId"
-            :id="task.id"
-            :key="task.id"
-        ></task-app>
+    <div id="tasks">
+        <add-task-app></add-task-app>
+        <div class="pl-20 overflow-auto">
+            <task-count-app
+                title="Tasks"
+                :completedTaskNum="completedTaskNum"
+                :taskCount="taskCount"
+            ></task-count-app>
+            <period-select-app></period-select-app>
+            <task-list-app :tasks="tasks"></task-list-app>
+            <div
+                id="overflow-gradient"
+                class="fixed bottom-0 w-full h-24 bg-gradient-to-t from-white to-transparent"
+            ></div>
+        </div>
     </div>
 </template>
 
 <script>
 import firebase from "../firebaseConfig.js";
-import Task from "../components/Task";
+import TaskList from "./TaskList.vue";
+import AddTask from "./AddTask";
+import PeriodSelect from "./PeriodSelect";
+import TaskHabitCount from "./TaskHabitCount";
 import { eventBus } from "../main";
 
 const db = firebase.firestore();
@@ -20,12 +30,14 @@ const db = firebase.firestore();
 export default {
     name: "Tasks",
     components: {
-        "task-app": Task
+        "task-list-app": TaskList,
+        "add-task-app": AddTask,
+        "period-select-app": PeriodSelect,
+        "task-count-app": TaskHabitCount
     },
     data() {
         return {
             tasks: [],
-            recentlyAddedId: null,
             selectedPeriod: 1
         };
     },
@@ -35,10 +47,22 @@ export default {
             .orderBy("createdAt", "desc")
             .where("period", "==", 1)
     },
+    computed: {
+        completedTaskNum() {
+            var completed = 0;
+            this.tasks.forEach(task => {
+                if (task.completed) {
+                    completed++;
+                }
+            });
+            console.log(completed);
+            return completed;
+        },
+        taskCount() {
+            return this.tasks.length;
+        }
+    },
     created() {
-        eventBus.$on("recentlyAddedTask", data => {
-            this.recentlyAddedId = data;
-        });
         eventBus.$on("selectedPeriod", data => {
             this.selectedPeriod = data;
         });

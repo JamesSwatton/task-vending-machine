@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-block px-8 pt-32 pb-16">
+    <div class="inline-block px-8 pt-10 pb-16">
         <button
             class="period-btn"
             :class="{ current: selected === 1 }"
