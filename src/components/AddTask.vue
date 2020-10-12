@@ -1,7 +1,8 @@
 <template>
     <div
-        class="fixed inline-flex flex-col items-center w-20 h-screen pt-20 bg-white border-r border-gray-300"
+        class="fixed inline-flex flex-col items-center w-20 h-screen bg-white border-r border-gray-300"
     >
+        <logo-app class="pt-6 pb-12"></logo-app>
         <btn-add-app class="mb-6" @click.native="addNewTask"></btn-add-app>
         <div id="colour-select">
             <div
@@ -48,6 +49,7 @@
 <script>
 import BtnDeleteAll from "./buttons/BtnDeleteAll.vue";
 import BtnAdd from "./buttons/BtnAdd.vue";
+import Logo from "./Logo.vue";
 import firebase from "../firebaseConfig.js";
 import { eventBus } from "../main";
 
@@ -57,7 +59,8 @@ export default {
     name: "AddTask",
     components: {
         "btn-delete-app": BtnDeleteAll,
-        "btn-add-app": BtnAdd
+        "btn-add-app": BtnAdd,
+        "logo-app": Logo
     },
     data() {
         return {
