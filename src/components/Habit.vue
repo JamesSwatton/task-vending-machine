@@ -4,7 +4,8 @@
             <div class="flex items-center flex-shrink-0 h-6">
                 <p
                     id="count"
-                    class="max-h-full px-5 text-lg font-light leading-tight text-white bg-blue-400 rounded-full"
+                    class="max-h-full px-5 text-lg font-light leading-tight text-white rounded-full"
+                    :class="[isCompleted ? 'bg-green-400' : 'bg-blue-400']"
                 >
                     {{ habitCopy.count }} / {{ habitCopy.max }}
                 </p>
@@ -96,6 +97,9 @@ export default {
     computed: {
         isRecentHabit() {
             return this.id == this.recentlyAddedId;
+        },
+        isCompleted() {
+            return this.habit.count == this.habit.max;
         }
     },
     watch: {
@@ -135,6 +139,9 @@ export default {
                 .update({ count: newCount, updatedAt: Date.now() })
                 .then(function() {
                     console.log("Habit count successfully updated!");
+                })
+                .catch(function(error) {
+                    console.error("Error updating document: ", error);
                 });
         },
         newResetTime(period) {
@@ -161,6 +168,12 @@ export default {
                     count: 0,
                     updatedAt: Date.now(),
                     resetTime: resetTime
+                })
+                .then(function() {
+                    console.log("Habit count successfully reset!");
+                })
+                .catch(function(error) {
+                    console.error("Error updating document: ", error);
                 });
         },
         habitReset() {
