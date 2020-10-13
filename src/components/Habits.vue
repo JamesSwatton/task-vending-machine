@@ -1,45 +1,53 @@
 <template>
-    <div id="habits" class="px-8 border-l border-gray-300">
-        <div id="daily" class="habit-heading">
-            <p class="text-3xl text-gray-800">Today</p>
-            <btn-add-app @click.native="addNewHabit(1)"></btn-add-app>
+    <div>
+        <habit-count-app
+            title="Habits"
+            :completed="completedHabitNum"
+            :count="habitCount"
+        ></habit-count-app>
+        <div id="habits" class="px-8 pt-24 border-l border-gray-300">
+            <div id="daily" class="habit-heading">
+                <p class="text-3xl text-gray-800">Today</p>
+                <btn-add-app @click.native="addNewHabit(1)"></btn-add-app>
+            </div>
+            <habit-app
+                v-for="dailyHabit in daily"
+                :key="dailyHabit.id"
+                :habit="dailyHabit"
+                :recentlyAddedId="recentlyAddedId"
+                :id="dailyHabit.id"
+            ></habit-app>
+            <div id="weekly" class="habit-heading">
+                <p class="text-3xl text-gray-800">Weekly</p>
+                <btn-add-app @click.native="addNewHabit(2)"></btn-add-app>
+            </div>
+            <habit-app
+                v-for="weeklyHabit in weekly"
+                :key="weeklyHabit.id"
+                :habit="weeklyHabit"
+                :recentlyAddedId="recentlyAddedId"
+                :id="weeklyHabit.id"
+            ></habit-app>
+            <div id="monthly" class="habit-heading">
+                <p class="text-3xl text-gray-800">Monthly</p>
+                <btn-add-app @click.native="addNewHabit(3)"></btn-add-app>
+            </div>
+            <habit-app
+                v-for="monthlyHabit in monthly"
+                :key="monthlyHabit.id"
+                :habit="monthlyHabit"
+                :recentlyAddedId="recentlyAddedId"
+                :id="monthlyHabit.id"
+            ></habit-app>
         </div>
-        <habit-app
-            v-for="dailyHabit in daily"
-            :key="dailyHabit.id"
-            :habit="dailyHabit"
-            :recentlyAddedId="recentlyAddedId"
-            :id="dailyHabit.id"
-        ></habit-app>
-        <div id="weekly" class="habit-heading">
-            <p class="text-3xl text-gray-800">Weekly</p>
-            <btn-add-app @click.native="addNewHabit(2)"></btn-add-app>
-        </div>
-        <habit-app
-            v-for="weeklyHabit in weekly"
-            :key="weeklyHabit.id"
-            :habit="weeklyHabit"
-            :recentlyAddedId="recentlyAddedId"
-            :id="weeklyHabit.id"
-        ></habit-app>
-        <div id="monthly" class="habit-heading">
-            <p class="text-3xl text-gray-800">Monthly</p>
-            <btn-add-app @click.native="addNewHabit(3)"></btn-add-app>
-        </div>
-        <habit-app
-            v-for="monthlyHabit in monthly"
-            :key="monthlyHabit.id"
-            :habit="monthlyHabit"
-            :recentlyAddedId="recentlyAddedId"
-            :id="monthlyHabit.id"
-        ></habit-app>
     </div>
 </template>
 
 <script>
 import firebase from "../firebaseConfig";
-import BtnAdd from "../components/buttons/BtnAdd";
-import Habit from "../components/Habit";
+import BtnAdd from "./buttons/BtnAdd";
+import Habit from "./Habit";
+import TaskHabitCount from "./TaskHabitCount";
 import { eventBus } from "../main.js";
 
 const db = firebase.firestore();
@@ -48,7 +56,8 @@ export default {
     name: "Habits",
     components: {
         "btn-add-app": BtnAdd,
-        "habit-app": Habit
+        "habit-app": Habit,
+        "habit-count-app": TaskHabitCount
     },
     data() {
         return {
@@ -69,9 +78,36 @@ export default {
         };
     },
     firestore: {
-        daily: db.collection("habits").orderBy("createdAt").where("period", "==", 1),
-        weekly: db.collection("habits").orderBy("createdAt").where("period", "==", 2),
-        monthly: db.collection("habits").orderBy("createdAt").where("period", "==", 3)
+        daily: db
+            .collection("habits")
+            .orderBy("createdAt")
+            .where("period", "==", 1),
+        weekly: db
+            .collection("habits")
+            .orderBy("createdAt")
+            .where("period", "==", 2),
+        monthly: db
+            .collection("habits")
+            .orderBy("createdAt")
+            .where("period", "==", 3)
+    },
+    computed: {
+        allHabits() {
+            return [...this.daily, ...this.weekly, ...this.monthly];
+        },
+        completedHabitNum() {
+            var completed = 0;
+            this.allHabits.forEach(habit => {
+                if (habit.count == habit.max) {
+                    completed++;
+                }
+            });
+            console.log(completed);
+            return completed;
+        },
+        habitCount() {
+            return this.allHabits.length;
+        }
     },
     methods: {
         addNewHabit(period) {

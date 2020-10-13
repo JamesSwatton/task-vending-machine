@@ -4,8 +4,9 @@
         <div class="pl-20 overflow-auto">
             <task-count-app
                 title="Tasks"
-                :completedTaskNum="completedTaskNum"
-                :taskCount="taskCount"
+                :completed="completedTaskNum"
+                :count="taskCount"
+                justify="end"
             ></task-count-app>
             <period-select-app></period-select-app>
             <task-list-app :tasks="tasks"></task-list-app>
