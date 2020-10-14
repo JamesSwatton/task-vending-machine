@@ -1,6 +1,6 @@
 <template>
     <div class="h-screen">
-        <div class="flex justify-between">
+        <div class="flex">
             <tasks-app></tasks-app>
             <habits-app></habits-app>
         </div>

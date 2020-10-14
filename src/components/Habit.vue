@@ -99,7 +99,7 @@ export default {
             return this.id == this.recentlyAddedId;
         },
         isCompleted() {
-            return this.habit.count == this.habit.max;
+            return this.habit.count > 0 && this.habit.count == this.habit.max;
         }
     },
     watch: {

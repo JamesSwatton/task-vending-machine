@@ -131,6 +131,7 @@ export default {
             this.defaultHabit.resetTime = resetTime;
             this.defaultHabit.period = period;
             this.defaultHabit.updatedAt = Date.now();
+            this.defaultHabit.createdAt = Date.now();
 
             db.collection("habits")
                 .add(this.defaultHabit)
