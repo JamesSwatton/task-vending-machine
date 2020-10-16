@@ -1,7 +1,7 @@
 <template>
     <div id="logo">
         <svg
-            class="w-16 h-16"
+            :class="size"
             viewBox="0 0 336 394"
             xmlns="http://www.w3.org/2000/svg"
             fill-rule="evenodd"
@@ -42,6 +42,17 @@
 
 <script>
 export default {
-    name: "Logo"
+    name: "Logo",
+    props: ["size"]
 };
 </script>
+
+<style scoped>
+.small {
+    @apply w-16 h-16;
+}
+
+.large {
+    @apply w-32 h-32;
+}
+</style>
