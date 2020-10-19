@@ -119,7 +119,9 @@ export default {
             this.defaultHabit.updatedAt = Date.now();
             this.defaultHabit.createdAt = Date.now();
 
-            db.collection("habits")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("habits")
                 .add(this.defaultHabit)
                 .then(function(docRef) {
                     self.recentlyAddedId = docRef.id;

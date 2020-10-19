@@ -134,7 +134,9 @@ export default {
             }
         },
         updateCount(newCount) {
-            db.collection("habits")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("habits")
                 .doc(this.id)
                 .update({ count: newCount, updatedAt: Date.now() })
                 .then(function() {
@@ -145,7 +147,6 @@ export default {
                 });
         },
         newResetTime(period) {
-            console.log("poop");
             var d = new Date();
             var resetTime;
             if (period == 1) {
@@ -162,7 +163,9 @@ export default {
                 resetTime = nextMonth;
             }
 
-            db.collection("habits")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("habits")
                 .doc(this.id)
                 .update({
                     count: 0,
@@ -195,7 +198,9 @@ export default {
         updateHabit() {
             if (this.updatingHabit) {
                 this.habitCopy.updatedAt = Date.now();
-                db.collection("habits")
+                db.collection("users")
+                    .doc(firebase.auth().currentUser.uid)
+                    .collection("habits")
                     .doc(this.id)
                     .update(this.habitCopy)
                     .then(function() {
@@ -210,7 +215,9 @@ export default {
             this.updatingHabit = !this.updatingHabit;
         },
         deleteHabit(habit) {
-            db.collection("habits")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("habits")
                 .doc(habit.id)
                 .delete()
                 .then(function() {
