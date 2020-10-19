@@ -75,7 +75,8 @@ export default {
                 .auth()
                 .createUserWithEmailAndPassword(this.email, this.password)
                 .then(
-                    () => {
+                    result => {
+                        console.log(result.user.uid);
                         this.$router.replace("home");
                     },
                     err => {
