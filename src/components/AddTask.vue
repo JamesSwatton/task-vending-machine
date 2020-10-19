@@ -112,7 +112,9 @@ export default {
             console.log(this.defaultTask.createdAt);
             this.defaultTask.createdAt = Date.now();
             this.defaultTask.updatedAt = Date.now();
-            db.collection("tasks")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("tasks")
                 .add(this.defaultTask)
                 .then(function(docRef) {
                     console.log("Document successfully written!");
@@ -125,6 +127,8 @@ export default {
         },
         deleteCompletedTasks() {
             const taskQuery = db
+                .collection("users")
+                .doc(firebase.auth().currentUser.uid)
                 .collection("tasks")
                 .where("period", "==", this.selectedPeriod)
                 .where("completed", "==", true);

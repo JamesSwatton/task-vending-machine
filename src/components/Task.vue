@@ -138,7 +138,9 @@ export default {
         updateTask() {
             if (this.updatingTask) {
                 this.taskCopy.updatedAt = Date.now();
-                db.collection("tasks")
+                db.collection("users")
+                    .doc(firebase.auth().currentUser.uid)
+                    .collection("tasks")
                     .doc(this.id)
                     .update(this.taskCopy)
                     .then(function() {
@@ -154,7 +156,9 @@ export default {
         },
         updateStatus(task) {
             const newStatus = !task.completed;
-            db.collection("tasks")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("tasks")
                 .doc(task.id)
                 .update({ completed: newStatus })
                 .then(function() {
@@ -166,7 +170,9 @@ export default {
                 });
         },
         deleteTask(task) {
-            db.collection("tasks")
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("tasks")
                 .doc(task.id)
                 .delete()
                 .then(function() {
