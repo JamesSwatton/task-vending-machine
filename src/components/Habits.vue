@@ -77,20 +77,6 @@ export default {
             monthly: []
         };
     },
-    firestore: {
-        daily: db
-            .collection("habits")
-            .orderBy("createdAt")
-            .where("period", "==", 1),
-        weekly: db
-            .collection("habits")
-            .orderBy("createdAt")
-            .where("period", "==", 2),
-        monthly: db
-            .collection("habits")
-            .orderBy("createdAt")
-            .where("period", "==", 3)
-    },
     computed: {
         allHabits() {
             return [...this.daily, ...this.weekly, ...this.monthly];
@@ -148,6 +134,34 @@ export default {
         }
     },
     created() {
+        const userId = firebase.auth().currentUser.uid;
+        this.$bind(
+            "daily",
+            db
+                .collection("users")
+                .doc(userId)
+                .collection("habits")
+                .orderBy("createdAt")
+                .where("period", "==", 1)
+        );
+        this.$bind(
+            "weekly",
+            db
+                .collection("users")
+                .doc(userId)
+                .collection("habits")
+                .orderBy("createdAt")
+                .where("period", "==", 2)
+        );
+        this.$bind(
+            "monthly",
+            db
+                .collection("users")
+                .doc(userId)
+                .collection("habits")
+                .orderBy("createdAt")
+                .where("period", "==", 3)
+        );
         eventBus.$on("recentlyAddedHabit", data => {
             this.recentlyAddedId = data;
         });

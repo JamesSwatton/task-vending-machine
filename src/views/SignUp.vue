@@ -61,12 +61,33 @@
 <script>
 import firebase from "../firebaseConfig";
 
+const db = firebase.firestore();
+
 export default {
     name: "SignUp",
     data() {
         return {
             email: "",
-            password: ""
+            password: "",
+            defaultTask: {
+                title: "Title",
+                description: "Description",
+                completed: false,
+                colour: 1,
+                period: 1,
+                updatedAt: null,
+                createdAt: Date.now()
+            },
+            defaultHabit: {
+                title: "Title",
+                period: 1,
+                resetTime: null,
+                count: 0,
+                max: 0,
+                id: null,
+                updatedAt: null,
+                createdAt: Date.now()
+            }
         };
     },
     methods: {
@@ -74,15 +95,36 @@ export default {
             firebase
                 .auth()
                 .createUserWithEmailAndPassword(this.email, this.password)
-                .then(
-                    result => {
-                        console.log(result.user.uid);
-                        this.$router.replace("home");
-                    },
-                    err => {
-                        alert("Oops. " + err.message);
-                    }
-                );
+                .then(result => {
+                    this.createUserDoc(result.user.uid);
+                })
+                .then(() => {
+                    this.$router.replace("home");
+                });
+        },
+        createUserDoc(uid) {
+            db.collection("users")
+                .doc(uid)
+                .collection("tasks")
+                .add(this.defaultTask)
+                .then(() => {
+                    console.log("Account successfully created!");
+                    console.log("Task document added");
+                })
+                .catch(error => {
+                    console.error("Error writing document: ", error);
+                });
+
+            db.collection("users")
+                .doc(uid)
+                .collection("habits")
+                .add(this.defaultHabit)
+                .then(() => {
+                    console.log("Habit document added");
+                })
+                .catch(error => {
+                    console.error("Error writing document: ", error);
+                });
         }
     }
 };

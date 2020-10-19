@@ -39,14 +39,8 @@ export default {
     data() {
         return {
             tasks: [],
-            selectedPeriod: 1
+            selectedPeriod: 1,
         };
-    },
-    firestore: {
-        tasks: db
-            .collection("tasks")
-            .orderBy("createdAt", "desc")
-            .where("period", "==", 1)
     },
     computed: {
         completedTaskNum() {
@@ -64,6 +58,16 @@ export default {
         }
     },
     created() {
+        const userId = firebase.auth().currentUser.uid;
+        this.$bind(
+            "tasks",
+            db
+                .collection("users")
+                .doc(userId)
+                .collection("tasks")
+                .orderBy("createdAt", "desc")
+                .where("period", "==", this.selectedPeriod)
+        );
         eventBus.$on("selectedPeriod", data => {
             this.selectedPeriod = data;
         });
@@ -75,6 +79,8 @@ export default {
                 this.$bind(
                     "tasks",
                     db
+                        .collection("users")
+                        .doc("userId")
                         .collection("tasks")
                         .orderBy("createdAt", "desc")
                         .where("period", "==", selectedPeriod)
