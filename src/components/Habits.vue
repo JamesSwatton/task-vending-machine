@@ -133,37 +133,21 @@ export default {
                 .catch(function(error) {
                     console.error("Error writing document: ", error);
                 });
+        },
+        bindData(userId, period) {
+            return db
+                .collection("users")
+                .doc(userId)
+                .collection("habits")
+                .orderBy("createdAt")
+                .where("period", "==", period);
         }
     },
     created() {
         const userId = firebase.auth().currentUser.uid;
-        this.$bind(
-            "daily",
-            db
-                .collection("users")
-                .doc(userId)
-                .collection("habits")
-                .orderBy("createdAt")
-                .where("period", "==", 1)
-        );
-        this.$bind(
-            "weekly",
-            db
-                .collection("users")
-                .doc(userId)
-                .collection("habits")
-                .orderBy("createdAt")
-                .where("period", "==", 2)
-        );
-        this.$bind(
-            "monthly",
-            db
-                .collection("users")
-                .doc(userId)
-                .collection("habits")
-                .orderBy("createdAt")
-                .where("period", "==", 3)
-        );
+        this.$bind("daily", this.bindData(userId, 1));
+        this.$bind("weekly", this.bindData(userId, 2));
+        this.$bind("monthly", this.bindData(userId, 3));
         eventBus.$on("recentlyAddedHabit", data => {
             this.recentlyAddedId = data;
         });
