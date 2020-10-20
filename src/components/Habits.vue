@@ -162,6 +162,6 @@ export default {
     min-width: 420px;
 }
 .habit-heading {
-    @apply flex py-2 justify-between items-center border-b border-gray-500;
+    @apply flex pb-2 pt-4 justify-between items-center border-b border-gray-500;
 }
 </style>
