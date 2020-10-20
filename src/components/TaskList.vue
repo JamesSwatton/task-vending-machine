@@ -4,6 +4,7 @@
             v-for="task in tasks"
             :task="task"
             :recentlyAddedId="recentlyAddedId"
+            :tokenTotal="tokenTotal"
             :id="task.id"
             :key="task.id"
         ></task-app>
@@ -22,13 +23,17 @@ export default {
     },
     data() {
         return {
-            recentlyAddedId: null
+            recentlyAddedId: null,
+            tokenTotal: null
         };
     },
     created() {
         eventBus.$on("recentlyAddedTask", data => {
             this.recentlyAddedId = data;
         });
+        eventBus.$on("tokenTotal", data => {
+            this.tokenTotal = data;
+        })
     }
 };
 </script>

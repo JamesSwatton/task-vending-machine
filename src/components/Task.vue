@@ -101,7 +101,7 @@ const db = firebase.firestore();
 
 export default {
     name: "Task",
-    props: ["task", "recentlyAddedId", "id"],
+    props: ["task", "recentlyAddedId", "id", "tokenTotal"],
     directives: {
         focus: {
             inserted(el) {
@@ -170,6 +170,10 @@ export default {
                 });
         },
         deleteTask(task) {
+            if (task.completed) {
+                this.updateTokenTotal();
+            }
+
             db.collection("users")
                 .doc(firebase.auth().currentUser.uid)
                 .collection("tasks")
@@ -182,15 +186,23 @@ export default {
                     console.error("Error removing document: ", error);
                 });
         },
-        resetForm() {
-            for (let key in this.newTask) {
-                const resetKeys = ["title", "description", "updatedAt"];
-                if (resetKeys.includes(key)) {
-                    this.newTask[key] = null;
-                }
-            }
-            this.newTask.completed = false;
-            this.updatingTask = false;
+        updateTokenTotal() {
+            console.log(this.tokenTotal);
+            var newTotal = this.tokenTotal + 10;
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    tokenTotal: newTotal
+                })
+                .then(res => {
+                    console.log("res: " + res);
+                    console.log(
+                        "Token total successfully updated! New total: " + res
+                    );
+                })
+                .catch(err => {
+                    console.error("Token total not updated: " + err);
+                });
         }
     }
 };

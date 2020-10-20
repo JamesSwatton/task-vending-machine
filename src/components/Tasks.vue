@@ -6,7 +6,7 @@
                 <token-count-app></token-count-app>
                 <task-count-app
                     title="Tasks"
-                    :completed="completedTaskNum"
+                    :completed="completedTasksNum"
                     :count="taskCount"
                     justify="end"
                 ></task-count-app>
@@ -44,25 +44,32 @@ export default {
     data() {
         return {
             tasks: [],
+            allTasks: [],
             selectedPeriod: 1
         };
     },
     computed: {
-        completedTaskNum() {
+        completedTasksNum() {
             var completed = 0;
-            this.tasks.forEach(task => {
+            this.allTasks.forEach(task => {
                 if (task.completed) {
                     completed++;
                 }
             });
-            console.log(completed);
+
+            eventBus.$emit("completedTasksNum", completed);
+
             return completed;
         },
         taskCount() {
-            return this.tasks.length;
+            return this.allTasks.length;
         }
     },
     created() {
+        eventBus.$on("selectedPeriod", data => {
+            this.selectedPeriod = data;
+        });
+
         const userId = firebase.auth().currentUser.uid;
         this.$bind(
             "tasks",
@@ -73,9 +80,13 @@ export default {
                 .orderBy("createdAt", "desc")
                 .where("period", "==", this.selectedPeriod)
         );
-        eventBus.$on("selectedPeriod", data => {
-            this.selectedPeriod = data;
-        });
+        this.$bind(
+            "allTasks",
+            db
+                .collection("users")
+                .doc(userId)
+                .collection("tasks")
+        );
     },
     watch: {
         selectedPeriod: {

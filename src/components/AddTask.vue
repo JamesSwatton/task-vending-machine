@@ -109,7 +109,6 @@ export default {
             this.defaultTask.colour = parseInt(event.target.value);
         },
         addNewTask() {
-            console.log(this.defaultTask.createdAt);
             this.defaultTask.createdAt = Date.now();
             this.defaultTask.updatedAt = Date.now();
             db.collection("users")
