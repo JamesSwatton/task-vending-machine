@@ -39,7 +39,7 @@ export default {
     data() {
         return {
             tasks: [],
-            selectedPeriod: 1,
+            selectedPeriod: 1
         };
     },
     computed: {
@@ -80,7 +80,7 @@ export default {
                     "tasks",
                     db
                         .collection("users")
-                        .doc("userId")
+                        .doc(firebase.auth().currentUser.uid)
                         .collection("tasks")
                         .orderBy("createdAt", "desc")
                         .where("period", "==", selectedPeriod)

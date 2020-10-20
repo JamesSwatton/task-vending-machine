@@ -145,9 +145,11 @@ export default {
     },
     created() {
         const userId = firebase.auth().currentUser.uid;
+
         this.$bind("daily", this.bindData(userId, 1));
         this.$bind("weekly", this.bindData(userId, 2));
         this.$bind("monthly", this.bindData(userId, 3));
+
         eventBus.$on("recentlyAddedHabit", data => {
             this.recentlyAddedId = data;
         });
