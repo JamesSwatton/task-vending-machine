@@ -1,7 +1,7 @@
 <template>
     <div class="h-screen">
         <div class="flex">
-            <tasks-app class="flex-grow w-1/3 min-w-0"></tasks-app>
+            <tasks-app></tasks-app>
             <habits-app></habits-app>
         </div>
     </div>

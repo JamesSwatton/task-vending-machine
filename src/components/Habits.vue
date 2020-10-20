@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="h-screen border-l border-gray-300">
         <habit-count-app
             title="Habits"
             :completed="completedHabitNum"
             :count="habitCount"
         ></habit-count-app>
-        <div id="habits" class="px-8 pt-24 border-l border-gray-300">
-            <div id="daily" class="habit-heading">
+        <div id="habits" class="px-8 pt-32">
+            <div id="daily" class="pt-1 habit-heading">
                 <p class="text-3xl text-gray-800">Today</p>
                 <btn-add-app @click.native="addNewHabit(1)"></btn-add-app>
             </div>
