@@ -77,7 +77,7 @@ const db = firebase.firestore();
 
 export default {
     name: "Habit",
-    props: ["habit", "recentlyAddedId", "id"],
+    props: ["habit", "recentlyAddedId", "id", "tokenTotal"],
     directives: {
         focus: {
             inserted(el) {
@@ -112,6 +112,7 @@ export default {
     created() {
         this.habitCopy = { ...this.habit };
         this.habitReset();
+        console.log("habit token total: " + this.tokenTotal);
     },
     methods: {
         increase() {
@@ -215,6 +216,11 @@ export default {
             this.updatingHabit = !this.updatingHabit;
         },
         deleteHabit(habit) {
+            if (this.isCompleted) {
+                console.log("hello");
+                this.updateTokenTotal();
+            }
+
             db.collection("users")
                 .doc(firebase.auth().currentUser.uid)
                 .collection("habits")
@@ -225,6 +231,21 @@ export default {
                 })
                 .catch(function(error) {
                     console.error("Error removing document: ", error);
+                });
+        },
+        updateTokenTotal() {
+            var newTotal = this.tokenTotal + 10;
+            console.log("new total: " + newTotal);
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .update({
+                    tokenTotal: newTotal
+                })
+                .then(() => {
+                    console.log("Token total successfully updated!");
+                })
+                .catch(err => {
+                    console.error("Token total not updated: " + err);
                 });
         }
     }

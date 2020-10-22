@@ -4,7 +4,6 @@
         <p class="text-3xl font-hairline leading-tight">
             {{ tokenTotal }}
         </p>
-        <button @click="update">add</button>
     </div>
 </template>
 
@@ -26,41 +25,26 @@ export default {
     },
     computed: {
         tokenTotal() {
-            return this.user.tokenTotal;
+            return { ...this.user }.tokenTotal + this.tokenActiveTotal;
         },
         tokenActiveTotal() {
-            return this.tokenValue * this.completedTasksNum;
+            return (
+                this.tokenValue *
+                (this.completedTasksNum + this.completedHabitsNum)
+            );
         }
     },
     watch: {
         user() {
-            console.log("watching");
             eventBus.$emit("tokenTotal", { ...this.user }.tokenTotal);
         }
     },
     methods: {
-        update() {
-            var tokenCopy = { ...this.user }.tokenTotal;
-            const newTotal = (tokenCopy += 10);
-
-            db.collection("users")
-                .doc(firebase.auth().currentUser.uid)
-                .update({
-                    tokenTotal: newTotal
-                })
-                .then(() => {
-                    console.log("Token successfully updated!");
-                })
-                .catch(err => {
-                    console.error("Token update failed: " + err);
-                });
-        },
         bindData() {
             this.$bind(
                 "user",
                 db.collection("users").doc(firebase.auth().currentUser.uid)
             ).then(user => {
-                console.log("tok " + user.tokenTotal);
                 eventBus.$emit("tokenTotal", { ...user }.tokenTotal);
             });
         }

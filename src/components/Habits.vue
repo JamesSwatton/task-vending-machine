@@ -2,7 +2,7 @@
     <div class="h-screen border-l border-gray-300">
         <habit-count-app
             title="Habits"
-            :completed="completedHabitNum"
+            :completed="completedHabitsNum"
             :count="habitCount"
         ></habit-count-app>
         <div id="habits" class="px-8 pt-32">
@@ -15,6 +15,7 @@
                 :key="dailyHabit.id"
                 :habit="dailyHabit"
                 :recentlyAddedId="recentlyAddedId"
+                :tokenTotal="tokenTotal"
                 :id="dailyHabit.id"
             ></habit-app>
             <div id="weekly" class="habit-heading">
@@ -26,6 +27,7 @@
                 :key="weeklyHabit.id"
                 :habit="weeklyHabit"
                 :recentlyAddedId="recentlyAddedId"
+                :tokenTotal="tokenTotal"
                 :id="weeklyHabit.id"
             ></habit-app>
             <div id="monthly" class="habit-heading">
@@ -37,6 +39,7 @@
                 :key="monthlyHabit.id"
                 :habit="monthlyHabit"
                 :recentlyAddedId="recentlyAddedId"
+                :tokenTotal="tokenTotal"
                 :id="monthlyHabit.id"
             ></habit-app>
         </div>
@@ -62,12 +65,13 @@ export default {
     data() {
         return {
             recentlyAddedId: null,
+            tokenTotal: null,
             defaultHabit: {
                 title: "Title",
                 period: null,
                 resetTime: null,
                 count: 0,
-                max: 0,
+                max: 1,
                 id: null,
                 updatedAt: null,
                 createdAt: null
@@ -81,14 +85,14 @@ export default {
         allHabits() {
             return [...this.daily, ...this.weekly, ...this.monthly];
         },
-        completedHabitNum() {
+        completedHabitsNum() {
             var completed = 0;
             this.allHabits.forEach(habit => {
                 if (habit.count == habit.max) {
                     completed++;
                 }
             });
-            console.log(completed);
+            eventBus.$emit("completedHabitsNum", completed);
             return completed;
         },
         habitCount() {
@@ -98,6 +102,23 @@ export default {
     methods: {
         addNewHabit(period) {
             const self = this;
+            this.createResetDate(period);
+            db.collection("users")
+                .doc(firebase.auth().currentUser.uid)
+                .collection("habits")
+                .add(this.defaultHabit)
+                .then(function(docRef) {
+                    self.recentlyAddedId = docRef.id;
+                    console.log(
+                        "Document successfully written with id: ",
+                        docRef.id
+                    );
+                })
+                .catch(function(error) {
+                    console.error("Error writing document: ", error);
+                });
+        },
+        createResetDate(period) {
             var d = new Date();
             var resetTime;
             if (period == 1) {
@@ -118,40 +139,32 @@ export default {
             this.defaultHabit.period = period;
             this.defaultHabit.updatedAt = Date.now();
             this.defaultHabit.createdAt = Date.now();
-
-            db.collection("users")
-                .doc(firebase.auth().currentUser.uid)
-                .collection("habits")
-                .add(this.defaultHabit)
-                .then(function(docRef) {
-                    self.recentlyAddedId = docRef.id;
-                    console.log(
-                        "Document successfully written with id: ",
-                        docRef.id
-                    );
-                })
-                .catch(function(error) {
-                    console.error("Error writing document: ", error);
-                });
         },
-        bindData(userId, period) {
-            return db
-                .collection("users")
-                .doc(userId)
-                .collection("habits")
-                .orderBy("createdAt")
-                .where("period", "==", period);
+        bindData(property, period) {
+            const userId = firebase.auth().currentUser.uid;
+            this.$bind(
+                property,
+                db
+                    .collection("users")
+                    .doc(userId)
+                    .collection("habits")
+                    .orderBy("createdAt")
+                    .where("period", "==", period)
+            );
         }
     },
     created() {
-        const userId = firebase.auth().currentUser.uid;
-
-        this.$bind("daily", this.bindData(userId, 1));
-        this.$bind("weekly", this.bindData(userId, 2));
-        this.$bind("monthly", this.bindData(userId, 3));
+        this.bindData("daily", 1);
+        this.bindData("weekly", 2);
+        this.bindData("monthly", 3);
 
         eventBus.$on("recentlyAddedHabit", data => {
             this.recentlyAddedId = data;
+        });
+
+        eventBus.$on("tokenTotal", data => {
+            console.log("habits: " + data);
+            this.tokenTotal = data;
         });
     }
 };

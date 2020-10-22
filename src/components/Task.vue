@@ -187,18 +187,14 @@ export default {
                 });
         },
         updateTokenTotal() {
-            console.log(this.tokenTotal);
             var newTotal = this.tokenTotal + 10;
             db.collection("users")
                 .doc(firebase.auth().currentUser.uid)
                 .update({
                     tokenTotal: newTotal
                 })
-                .then(res => {
-                    console.log("res: " + res);
-                    console.log(
-                        "Token total successfully updated! New total: " + res
-                    );
+                .then(() => {
+                    console.log("Token total successfully updated!");
                 })
                 .catch(err => {
                     console.error("Token total not updated: " + err);
