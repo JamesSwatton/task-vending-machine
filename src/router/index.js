@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import firebase from "../firebaseConfig";
 import Home from "../views/Home.vue";
+import Vending from "../views/Vending.vue";
 import Login from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
 
@@ -19,7 +20,7 @@ const routes = [
     {
         path: "/login",
         name: "Login",
-        component: Login,
+        component: Login
     },
     {
         path: "/sign-up",
@@ -34,6 +35,11 @@ const routes = [
             requiresAuth: true
         }
     },
+    {
+        path: "/vending",
+        name: "Vending",
+        component: Vending
+    }
 ];
 
 const router = new VueRouter({
