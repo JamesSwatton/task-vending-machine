@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between max-w-full pt-5">
+    <div class="flex justify-between pt-5">
         <div class="flex items-center">
             <div class="flex items-center flex-shrink-0 h-6">
                 <p
