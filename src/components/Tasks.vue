@@ -1,6 +1,8 @@
 <template>
     <div id="tasks" class="flex-grow">
-        <add-task-app></add-task-app>
+        <sidebar-app>
+            <add-task-app></add-task-app>
+        </sidebar-app>
         <div class="pl-20 overflow-auto">
             <div class="flex justify-between">
                 <token-count-app></token-count-app>
@@ -25,6 +27,7 @@
 import firebase from "../firebaseConfig.js";
 import TaskList from "./TaskList.vue";
 import AddTask from "./AddTask";
+import SideBar from "./SideBar";
 import PeriodSelect from "./PeriodSelect";
 import TaskHabitCount from "./TaskHabitCount";
 import TokenCount from "./TokenCount";
@@ -36,6 +39,7 @@ export default {
     name: "Tasks",
     components: {
         "task-list-app": TaskList,
+        "sidebar-app": SideBar,
         "add-task-app": AddTask,
         "period-select-app": PeriodSelect,
         "task-count-app": TaskHabitCount,
