@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import { eventBus } from "../../main";
 import KeypadButton from "./KeypadButton";
 export default {
     name: "Keypad",
@@ -83,9 +84,10 @@ export default {
         },
         enter() {
             console.log("You selected: " + this.displayNum);
+            eventBus.$emit("enteredNum", this.displayNum);
         },
         emitDisplayNum() {
-            this.$emit("displayNum", this.displayNum);
+            eventBus.$emit("displayNum", this.displayNum);
         }
     },
     computed: {

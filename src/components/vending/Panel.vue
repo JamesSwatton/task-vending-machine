@@ -1,8 +1,8 @@
 <template>
     <div class="h-screen p-8 pt-40 border-l border-gray-300">
         <div class="w-64 p-6 mx-8 border-2 border-gray-700 rounded-lg">
-            <display-app :displayNum="displayNum"></display-app>
-            <keypad-app @displayNum="displayNum = $event"></keypad-app>
+            <display-app></display-app>
+            <keypad-app></keypad-app>
             <div class="flex items-center justify-center">
                 <div
                     id="token-slot"
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { eventBus } from "../../main";
 import Display from "./Display.vue";
 import Keypad from "./Keypad.vue";
 
@@ -37,14 +36,8 @@ export default {
     },
     data() {
         return {
-            displayNum: "0",
-            vendingNumbers: []
+            displayNum: "0"
         };
-    },
-    created() {
-        eventBus.$on("vendingNumbers", data => {
-            this.vendingNumbers = data;
-        });
     }
 };
 </script>

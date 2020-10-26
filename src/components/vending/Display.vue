@@ -14,8 +14,18 @@
 </template>
 
 <script>
+import { eventBus } from "../../main";
 export default {
     name: "Display",
-    props: ["displayNum"]
+    data() {
+        return {
+            displayNum: "0"
+        };
+    },
+    created() {
+        eventBus.$on("displayNum", data => {
+            this.displayNum = data;
+        });
+    }
 };
 </script>

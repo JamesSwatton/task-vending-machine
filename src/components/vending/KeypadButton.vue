@@ -22,6 +22,6 @@ export default {
 
 <style>
 .keypad-img {
-    @apply absolute top-0 left-0 rounded-sm;
+    @apply absolute top-0 left-0 rounded-md;
 }
 </style>
