@@ -1,8 +1,5 @@
 <template>
-    <div
-        id="display"
-        class="relative w-48 h-20 mx-auto my-8 bg-gray-400 rounded-md"
-    >
+    <div id="display" class="relative w-48 h-20 mx-auto bg-gray-400 rounded-md">
         <img
             src="../../assets/vending_screen.png"
             alt="vending screen"

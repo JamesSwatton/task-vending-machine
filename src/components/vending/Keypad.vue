@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="w-40 mx-auto my-5 grid grid-cols-3 gap-1">
+        <div class="w-40 py-6 mx-auto grid grid-cols-3 gap-1">
             <keypad-btn-app
                 :num="7"
                 @click.native="buttonPress(7)"
