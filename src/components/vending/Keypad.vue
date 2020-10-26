@@ -1,149 +1,58 @@
 <template>
     <div>
-        <display-app :displayNum="displayNum"></display-app>
         <div class="w-32 mx-auto mt-5 grid grid-cols-3 gap-1">
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500 "
-                @click="buttonPress(7)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                7
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(8)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                8
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(9)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                9
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(4)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                4
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(5)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                5
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(6)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                6
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(1)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                1
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(2)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                2
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(3)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                3
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="clear()"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                *
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="buttonPress(0)"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                0
-            </button>
-            <button
-                class="keypad-button hover:bg-gray-200 active:bg-gray-500"
-                @click="enter"
-            >
-                <img
-                    class="keypad-img"
-                    src="../../assets/vending_button.png"
-                    alt="vending button"
-                />
-                #
-            </button>
+            <keypad-btn-app
+                :num="7"
+                @click.native="buttonPress(7)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="8"
+                @click.native="buttonPress(8)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="9"
+                @click.native="buttonPress(9)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="4"
+                @click.native="buttonPress(4)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="5"
+                @click.native="buttonPress(5)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="6"
+                @click.native="buttonPress(6)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="1"
+                @click.native="buttonPress(1)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="2"
+                @click.native="buttonPress(2)"
+            ></keypad-btn-app>
+            <keypad-btn-app
+                :num="3"
+                @click.native="buttonPress(3)"
+            ></keypad-btn-app>
+            <keypad-btn-app :num="'*'" @click.native="clear()"></keypad-btn-app>
+            <keypad-btn-app
+                :num="0"
+                @click.native="buttonPress(0)"
+            ></keypad-btn-app>
+            <keypad-btn-app :num="'#'" @click.native="enter()"></keypad-btn-app>
         </div>
     </div>
 </template>
 
 <script>
-import Display from "./Display.vue";
+import KeypadButton from "./KeypadButton";
 export default {
     name: "Keypad",
     components: {
-        "display-app": Display
+        "keypad-btn-app": KeypadButton
     },
     data() {
         return {
@@ -166,12 +75,17 @@ export default {
                     this.inputNum.push(num);
                 }
             }
+            this.emitDisplayNum();
         },
         clear() {
             this.inputNum = ["0"];
+            this.emitDisplayNum();
         },
         enter() {
             console.log("You selected: " + this.displayNum);
+        },
+        emitDisplayNum() {
+            this.$emit("displayNum", this.displayNum);
         }
     },
     computed: {

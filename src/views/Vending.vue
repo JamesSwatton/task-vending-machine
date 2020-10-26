@@ -1,15 +1,15 @@
 <template>
     <div>
-        <keypad-app></keypad-app>
+        <panel-app></panel-app>
     </div>
 </template>
 
 <script>
-import Keypad from "../components/vending/Keypad";
+import Panel from "../components/vending/Panel";
 export default {
     name: "Vending",
     components: {
-        "keypad-app": Keypad
+        "panel-app": Panel
     }
 };
 </script>
