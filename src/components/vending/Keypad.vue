@@ -1,13 +1,13 @@
 <template>
     <div>
-        <h3 id="display" class="w-32 mx-auto text-3xl">{{ displayNum }}</h3>
-        <div class="w-32 mx-auto grid grid-cols-3 gap-1">
+        <display-app :displayNum="displayNum"></display-app>
+        <div class="w-32 mx-auto mt-5 grid grid-cols-3 gap-1">
             <button
                 class="keypad-button hover:bg-gray-200 active:bg-gray-500 "
                 @click="buttonPress(7)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -18,7 +18,7 @@
                 @click="buttonPress(8)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -29,7 +29,7 @@
                 @click="buttonPress(9)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -40,7 +40,7 @@
                 @click="buttonPress(4)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -51,7 +51,7 @@
                 @click="buttonPress(5)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -62,7 +62,7 @@
                 @click="buttonPress(6)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -73,7 +73,7 @@
                 @click="buttonPress(1)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -84,7 +84,7 @@
                 @click="buttonPress(2)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -95,7 +95,7 @@
                 @click="buttonPress(3)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -106,7 +106,7 @@
                 @click="clear()"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -117,7 +117,7 @@
                 @click="buttonPress(0)"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -128,7 +128,7 @@
                 @click="enter"
             >
                 <img
-                    class="absolute top-0 left-0"
+                    class="keypad-img"
                     src="../../assets/vending_button.png"
                     alt="vending button"
                 />
@@ -139,8 +139,12 @@
 </template>
 
 <script>
+import Display from "./Display.vue";
 export default {
     name: "Keypad",
+    components: {
+        "display-app": Display
+    },
     data() {
         return {
             inputNum: ["0"]
@@ -148,7 +152,7 @@ export default {
     },
     methods: {
         buttonPress(num) {
-            if (this.inputNum.length < 7) {
+            if (this.inputNum.length < 5) {
                 if (this.inputNum.length == 1 && num == 0) {
                     this.inputNum.push(num);
                 } else if (
@@ -182,6 +186,10 @@ export default {
 
 <style>
 .keypad-button {
-    @apply w-10 h-10 relative;
+    @apply w-10 h-10  relative;
+}
+
+.keypad-img {
+    @apply absolute top-0 left-0 rounded-sm;
 }
 </style>
